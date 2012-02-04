@@ -52,6 +52,12 @@
 
 **Build:** This project uses anvil.js (see http://github.com/arobson/anvil.js) for building/minifying.
 
-**Examples** The `examples` directory contains a simple sortable list, connected lists, and a seating chart sample that takes advantage of many of the additional options.
+**Examples** The `examples` directory contains samples that include a simple sortable list, connected lists, and a seating chart that takes advantage of many of the additional options.
+
+**Fiddles**
+* simple: http://jsfiddle.net/rniemeyer/hw9B2/
+* connected: http://jsfiddle.net/rniemeyer/Jr2rE/
+* seating chart: http://jsfiddle.net/rniemeyer/UdXr4/
+
 
 **License**: MIT [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php)
