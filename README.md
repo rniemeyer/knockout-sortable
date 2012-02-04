@@ -27,25 +27,26 @@
 * **allowDrop** - specify whether these items should be a target for drops.  This can be a static value, observable, or a function that is passed the observableArray as its first argument.  If a function is specified, then it will be executed in a computed observable, so it will run again whenever any dependencies are updated.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortbale.allowDrop`.
 
 * **beforeMove** - specify a function to execute prior to an item being moved from its original position to its new position in the data.  This function receives a single argument that contains the following information:
-    * arg.sourceIndex - the position of the item in the original observableArray
-    * arg.sourceParent - the original observableArray
-    * arg.targetIndex - the position of the item in the destination observableArray
-    * arg.targetParent - the destination observableArray
-    * arg.cancelDrop - this default to false and can be set to true to indicate that the drop should be cancelled.
+    * `arg.sourceIndex` - the position of the item in the original observableArray
+    * `arg.sourceParent` - the original observableArray
+    * `arg.targetIndex` - the position of the item in the destination observableArray
+    * `arg.targetParent` - the destination observableArray
+    * `arg.cancelDrop` - this default to false and can be set to true to indicate that the drop should be cancelled.
 
     This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.beforeMove`.
 
 * **afterMove** - specify a function to execute after an item has been moved to its new destination.  This function receives a single argument that contains the following information:
-    * arg.sourceIndex - the position of the item in the original observableArray
-    * arg.sourceParent - the original observableArray
-    * arg.targetIndex - the position of the item in the destination observableArray
-    * arg.targetParent - the destination observableArray
+    * `arg.sourceIndex` - the position of the item in the original observableArray
+    * `arg.sourceParent` - the original observableArray
+    * `arg.targetIndex` - the position of the item in the destination observableArray
+    * `arg.targetParent` - the destination observableArray
 
     This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.afterMove`.
 
 * **options** - specify any additional options to pass on to the `.sortable` jQuery UI call.  These options can be specified in the binding or specified globally by setting `ko.bindingHandlers.sortable.options`.
 
 **Dependencies**
+
 * Knockout 2.0+
 * jQuery - no specific version identified yet as minimum
 * jQuery UI - no specific version identfied yet as minimum
@@ -55,9 +56,11 @@
 **Examples** The `examples` directory contains samples that include a simple sortable list, connected lists, and a seating chart that takes advantage of many of the additional options.
 
 **Fiddles**
+
 * simple: http://jsfiddle.net/rniemeyer/hw9B2/
 * connected: http://jsfiddle.net/rniemeyer/Jr2rE/
 * seating chart: http://jsfiddle.net/rniemeyer/UdXr4/
+
 
 
 **License**: MIT [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php)
