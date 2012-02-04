@@ -3,13 +3,16 @@
 **Basic Usage**
 
 * using anonymous templates:
+
 ```html
 <ul data-bind="sortable: items>
   <li data-bind="text: name"></li>
 </ul>
 ```
 
+
 * using named templates:
+
 ```html
 <ul data-bind="sortable: { template: 'itemTmpl', data: items }"></ul>
 <script id="itemTmpl" type="text/html">
