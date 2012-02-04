@@ -1,0 +1,9 @@
+{
+	"source": "src",
+	"output": "build",
+	"spec": "spec",
+	"ext": "ext",
+	"lint": {},
+	"uglify": {},
+	"gzip": false
+}
