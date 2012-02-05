@@ -24,7 +24,7 @@
 
 * **connectClass** - specify the class that should be used to indicate a droppable target.  The default class is "ko_container".  This value can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.connectClass`.
 
-* **allowDrop** - specify whether these items should be a target for drops.  This can be a static value, observable, or a function that is passed the observableArray as its first argument.  If a function is specified, then it will be executed in a computed observable, so it will run again whenever any dependencies are updated.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortbale.allowDrop`.
+* **allowDrop** - specify whether these items should be a target for drops.  This can be a static value, observable, or a function that is passed the observableArray as its first argument.  If a function is specified, then it will be executed in a computed observable, so it will run again whenever any dependencies are updated.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.allowDrop`.
 
 * **beforeMove** - specify a function to execute prior to an item being moved from its original position to its new position in the data.  This function receives a single argument that contains the following information:
     * `arg.sourceIndex` - the position of the item in the original observableArray
@@ -44,6 +44,8 @@
     This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.afterMove`.
 
 * **options** - specify any additional options to pass on to the `.sortable` jQuery UI call.  These options can be specified in the binding or specified globally by setting `ko.bindingHandlers.sortable.options`.
+
+* **afterAdd, beforeRemove, afterRender, includeDestroyed, templateEngine** - this binding will pass these options on to the template binding.
 
 **Dependencies**
 
