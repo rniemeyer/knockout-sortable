@@ -32,10 +32,15 @@ var prepareTemplateOptions = function(valueAccessor) {
     return result;
 };
 
+var itemKey = "ko_sortItem",
+    listKey = "ko_sortList",
+    parentKey = "ko_parentList";
+
 //connect items with observableArrays
 ko.bindingHandlers.sortable = {
     init: function(element, valueAccessor, allBindingsAccessor, data, context) {
-        var value = ko.utils.unwrapObservable(valueAccessor()),
+        var $element = $(element),
+            value = ko.utils.unwrapObservable(valueAccessor()),
             templateOptions = prepareTemplateOptions(valueAccessor),
             sortable = ko.bindingHandlers.sortable,
             connectClass = value.connectClass || sortable.connectClass,
@@ -59,17 +64,18 @@ ko.bindingHandlers.sortable = {
         }
 
         //attach meta-data
-        $(element).data("ko_sortList", templateOptions.foreach);
-        $(element).sortable(ko.utils.extend(options, {
+        ko.utils.domData.set(element, listKey, templateOptions.foreach);
+        $element.sortable(ko.utils.extend(options, {
             update: function(event, ui) {
                 var sourceParent, targetParent, targetIndex, arg,
-                    item = ui.item.data("ko_sortItem");
+                    el = ui.item[0],
+                    item = ko.utils.domData.get(el, itemKey);
 
                 if (item) {
                     //identify parents
-                    sourceParent = ui.item.data("ko_parentList");
-                    targetParent = ui.item.parent().data("ko_sortList");
-                    targetIndex = ko.utils.arrayIndexOf(ui.item.parent().children(), ui.item[0]);
+                    sourceParent = ko.utils.domData.get(el, parentKey);
+                    targetParent = ko.utils.domData.get(el.parentNode, listKey);
+                    targetIndex = ko.utils.arrayIndexOf(el.parentNode.childNodes, el);
 
                     if (beforeMove || afterMove) {
                         arg = {
@@ -108,7 +114,7 @@ ko.bindingHandlers.sortable = {
 
         //handle disposal
         ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-            $(element).sortable("destroy");
+            $element.sortable("destroy");
         });
 
         //we are wrapping the template binding
@@ -123,8 +129,8 @@ ko.bindingHandlers.sortable = {
     afterRender: function(elements, data) {
         ko.utils.arrayForEach(elements, function(element) {
             if (element.nodeType === 1) {
-                $(element).data("ko_sortItem", data);
-                $(element).data("ko_parentList", $(element).parent().data("ko_sortList"));
+                ko.utils.domData.set(element, itemKey, data);
+                ko.utils.domData.set(element, parentKey, ko.utils.domData.get(element.parentNode, listKey));
             }
         });
     },

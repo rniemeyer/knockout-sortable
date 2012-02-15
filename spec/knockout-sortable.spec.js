@@ -102,15 +102,15 @@ describe("knockout-sortable", function(){
             });
 
             it("should attach meta-data to the root element indicating the parent observableArray", function() {
-                expect(options.root.data("ko_sortList")).toEqual(options.vm.items);
+                expect(ko.utils.domData.get(options.root[0], "ko_sortList")).toEqual(options.vm.items);
             });
 
             it("should attach meta-data to child elements indicating their item", function() {
-                expect(options.root.children().first().data("ko_sortItem")).toEqual(options.vm.items()[0]);
+                expect(ko.utils.domData.get(options.root.children()[0], "ko_sortItem")).toEqual(options.vm.items()[0]);
             });
 
             it("should attach meta-data to child elements indicating their parent observableArray", function() {
-                expect(options.root.children().first().data("ko_parentList")).toEqual(options.vm.items);
+                expect(ko.utils.domData.get(options.root.children()[0], "ko_parentList")).toEqual(options.vm.items);
             });
         });
 
