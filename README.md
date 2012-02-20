@@ -5,7 +5,7 @@
 * using anonymous templates:
 
 ```html
-<ul data-bind="sortable: items>
+<ul data-bind="sortable: items">
   <li data-bind="text: name"></li>
 </ul>
 ```
