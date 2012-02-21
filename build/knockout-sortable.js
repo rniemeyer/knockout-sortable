@@ -75,7 +75,7 @@ ko.bindingHandlers.sortable = {
                     //identify parents
                     sourceParent = ko.utils.domData.get(el, parentKey);
                     targetParent = ko.utils.domData.get(el.parentNode, listKey);
-                    targetIndex = ko.utils.arrayIndexOf(el.parentNode.childNodes, el);
+                    targetIndex = ko.utils.arrayIndexOf(ui.item.parent().children(), el);
 
                     if (beforeMove || afterMove) {
                         arg = {
