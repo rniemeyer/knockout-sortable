@@ -97,17 +97,13 @@ ko.bindingHandlers.sortable = {
                     }
 
                     if (targetIndex >= 0) {
-                        ko.utils.arrayRemoveItem(sourceParent(), item);
-                        if (sourceParent !== targetParent) {
-                            sourceParent.valueHasMutated();
-                        }
-						
-						ko.utils.domData.set(el, itemKey, null);
-						ui.item.remove();
+                        sourceParent.remove(item);
                         targetParent.splice(targetIndex, 0, item);
                     }
+
                     //rendering is handled by manipulating the observableArray; ignore dropped element
-                    
+                    ko.utils.domData.set(el, itemKey, null);
+                    ui.item.remove();
 
                     //allow binding to accept a function to execute after moving the item
                     if (afterMove) {

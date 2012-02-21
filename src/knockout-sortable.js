@@ -100,7 +100,7 @@ ko.bindingHandlers.sortable = {
                         sourceParent.remove(item);
                         targetParent.splice(targetIndex, 0, item);
                     }
-					
+
                     //rendering is handled by manipulating the observableArray; ignore dropped element
                     ko.utils.domData.set(el, itemKey, null);
                     ui.item.remove();
