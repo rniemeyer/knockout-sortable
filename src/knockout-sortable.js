@@ -99,8 +99,8 @@ ko.bindingHandlers.sortable = {
                     if (targetIndex >= 0) {
 						if (sourceParent === targetParent) {
 							var items = sourceParent();
+							ko.utils.arrayRemoveItem(items, item);
 							items.splice(targetIndex, 0, item);
-							items.remove(item);
 							targetParent(items);
 						} else {
 							sourceParent.remove(item);
