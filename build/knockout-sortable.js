@@ -97,7 +97,10 @@ ko.bindingHandlers.sortable = {
                     }
 
                     if (targetIndex >= 0) {
-                        sourceParent.remove(item);
+                        ko.utils.arrayRemoveItem(sourceParent(), item);
+                        if (sourceParent !== targetParent) {
+                            sourceParent.valueHasMutated();
+                        }
                         targetParent.splice(targetIndex, 0, item);
                     }
                     //rendering is handled by manipulating the observableArray; ignore dropped element
