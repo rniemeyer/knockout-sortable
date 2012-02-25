@@ -65,6 +65,19 @@ ko.bindingHandlers.sortable = {
 
         //attach meta-data
         ko.utils.domData.set(element, listKey, templateOptions.foreach);
+
+        //wrap the template binding
+        var templateArgs = [element, function() { return templateOptions; }, allBindingsAccessor, data, context];
+        ko.bindingHandlers.template.init.apply(this, templateArgs);
+        ko.computed({
+            read: function() {
+                ko.bindingHandlers.template.update.apply(this, templateArgs);
+            },
+            disposeWhenNodeIsRemoved: element,
+            owner: this
+        });
+
+        //initialize sortable binding
         $element.sortable(ko.utils.extend(options, {
             update: function(event, ui) {
                 var sourceParent, targetParent, targetIndex, arg,
@@ -119,14 +132,7 @@ ko.bindingHandlers.sortable = {
             $element.sortable("destroy");
         });
 
-        //we are wrapping the template binding
-        return ko.bindingHandlers.template.init(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
-    },
-    update: function(element, valueAccessor, allBindingsAccessor, data, context) {
-        var templateOptions = prepareTemplateOptions(valueAccessor);
-
-        //call the actual template binding
-        ko.bindingHandlers.template.update(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
+        return { 'controlsDescendantBindings': true };
     },
     afterRender: function(elements, data) {
         ko.utils.arrayForEach(elements, function(element) {
