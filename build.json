@@ -5,5 +5,12 @@
 	"ext": "ext",
 	"lint": {},
 	"uglify": {},
-	"gzip": false
+	"gzip": false,
+	"finalize": {
+		"header": "//knockout-sortable | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license"
+	},
+	"hosts": {
+		"/examples": "./examples",
+		"/build": "./build"
+	}
 }
