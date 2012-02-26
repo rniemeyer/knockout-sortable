@@ -75,11 +75,11 @@
         <h3>High Priority</h3>
 
         <div class="high"
-             data-bind="sortable: { template: 'taskTmpl', data: highPriorityTasks, afterDrop: myDropCallback }"></div>
+             data-bind="sortable: { template: 'taskTmpl', data: highPriorityTasks, afterMove: myDropCallback }"></div>
 
         <h3>Normal Priority</h3>
 
-        <div data-bind="sortable: { template: 'taskTmpl', data: normalPriorityTasks, afterDrop: myDropCallback }"></div>
+        <div data-bind="sortable: { template: 'taskTmpl', data: normalPriorityTasks, afterMove: myDropCallback }"></div>
 
         <a href="#" data-bind="click: addTask">Add Task</a>
         <hr/>
