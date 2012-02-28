@@ -247,38 +247,113 @@ describe("knockout-sortable", function(){
                     elems: $("<ul data-bind='sortable: items'><li data-bind='text: $data'></li></ul>"),
                     vm: { items: ko.observableArray([1, 2, 3]) }
                 };
+            });
+            
+            describe("when using an override class", function() {
+                beforeEach(function() {
+                    ko.bindingHandlers.sortable.connectClass = "mycontainer";
+                    setup(options);
+                });
 
-                ko.bindingHandlers.sortable.connectClass = "mycontainer";
-                setup(options);
+                it("should not add the default connectWith class 'ko_container' to the root element", function(){
+                    expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
+                });
+
+                it("should add the overriden connectWith class 'mycontainer' to the root element", function(){
+                    expect(options.root.hasClass('mycontainer')).toBeTruthy();
+                });
+            });
+            
+            describe("when setting the connectWith class to null", function() {
+                beforeEach(function() {
+                    ko.bindingHandlers.sortable.connectClass = null;
+                    setup(options);
+                });
+                
+                it("should not add a connectWith class to the root element", function() {
+                    expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
+                });
+                
+                it("should set this element's sortable connectWith option to false", function() {
+                    expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                });
+            });
+            
+            describe("when setting the connectWith class to false", function() {
+                beforeEach(function() {
+                    ko.bindingHandlers.sortable.connectClass = false;
+                    setup(options);
+                });
+                
+                it("should not add a connectWith class to the root element", function() {
+                    expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
+                });
+                
+                it("should set this element's sortable connectWith option to false", function() {
+                    expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                });
             });
 
-            it("should not add the default connectWith class 'ko_container' to the root element", function(){
-                expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
-            });
-
-            it("should add the overriden connectWith class 'mycontainer' to the root element", function(){
-                expect(options.root.hasClass('mycontainer')).toBeTruthy();
-            });
         });
 
         describe("when overriding connectClass in the binding options", function() {
             var options;
+            
+            describe("when using an override class", function() {
+                beforeEach(function() {
+                    options = {
+                        elems: $("<ul data-bind='sortable: { data: items, connectClass: \"mycontainer\" }'><li data-bind='text: $data'></li></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
 
-            beforeEach(function() {
-                options = {
-                    elems: $("<ul data-bind='sortable: { data: items, connectClass: \"mycontainer\" }'><li data-bind='text: $data'></li></ul>"),
-                    vm: { items: ko.observableArray([1, 2, 3]) }
-                };
+                    setup(options);
+                });
+                
+                it("should not add the default connectWith class 'ko_container' to the root element", function(){
+                    expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
+                });
 
-                setup(options);
+                it("should add the overriden connectWith class 'mycontainer' to the root element", function(){
+                    expect(options.root.hasClass('mycontainer')).toBeTruthy();
+                });
             });
+            
+            describe("when setting the connectWith class to null", function() {
+                beforeEach(function() {
+                    options = {
+                        elems: $("<ul data-bind='sortable: { data: items, connectClass: null }'><li data-bind='text: $data'></li></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
 
-            it("should not add the default connectWith class 'ko_container' to the root element", function(){
-                expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
+                    setup(options);
+                });
+                
+                it("should not add a connectWith class to the root element", function() {
+                    expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
+                });
+                
+                it("should set this element's sortable connectWith option to false", function() {
+                    expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                });
             });
+            
+            describe("when setting the connectWith class to false", function() {
+                beforeEach(function() {
+                    options = {
+                        elems: $("<ul data-bind='sortable: { data: items, connectClass: false }'><li data-bind='text: $data'></li></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
 
-            it("should add the overriden connectWith class 'mycontainer' to the root element", function(){
-                expect(options.root.hasClass('mycontainer')).toBeTruthy();
+                    setup(options);
+                });
+                
+                it("should not add a connectWith class to the root element", function() {
+                    expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
+                });
+                
+                it("should set this element's sortable connectWith option to false", function() {
+                    expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                });
             });
         });
 

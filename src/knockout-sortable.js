@@ -43,14 +43,14 @@ ko.bindingHandlers.sortable = {
             value = ko.utils.unwrapObservable(valueAccessor()),
             templateOptions = prepareTemplateOptions(valueAccessor),
             sortable = ko.bindingHandlers.sortable,
-            connectClass = value.connectClass || sortable.connectClass,
+            connectClass = typeof value.connectClass != "undefined" ? value.connectClass : sortable.connectClass,
             allowDrop = value.allowDrop === undefined ? sortable.allowDrop : value.allowDrop,
             beforeMove = value.beforeMove || sortable.beforeMove,
             afterMove = value.afterMove || sortable.afterMove,
             options = value.options || sortable.options;
 
         //if allowDrop is an observable or a function, then execute it in a computed observable
-        if (ko.isObservable(allowDrop) || typeof allowDrop == "function") {
+        if (connectClass && (ko.isObservable(allowDrop) || typeof allowDrop == "function")) {
             ko.computed({
                read: function() {
                    var value = ko.utils.unwrapObservable(allowDrop),
@@ -124,7 +124,7 @@ ko.bindingHandlers.sortable = {
                     }
                 }
             },
-            connectWith: "." + connectClass
+            connectWith: connectClass ? "." + connectClass : false
         }));
 
         //handle disposal
