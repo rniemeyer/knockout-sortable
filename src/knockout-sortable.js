@@ -43,7 +43,7 @@ ko.bindingHandlers.sortable = {
             value = ko.utils.unwrapObservable(valueAccessor()),
             templateOptions = prepareTemplateOptions(valueAccessor),
             sortable = ko.bindingHandlers.sortable,
-            connectClass = typeof value.connectClass != "undefined" ? value.connectClass : sortable.connectClass,
+            connectClass = value.connectClass !== undefined ? value.connectClass : sortable.connectClass,
             allowDrop = value.allowDrop === undefined ? sortable.allowDrop : value.allowDrop,
             beforeMove = value.beforeMove || sortable.beforeMove,
             afterMove = value.afterMove || sortable.afterMove,
