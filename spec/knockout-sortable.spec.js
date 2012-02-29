@@ -357,12 +357,91 @@ describe("knockout-sortable", function(){
             });
         });
 
+        describe("when setting isEnabled globally", function() {
+            var options;
+            beforeEach(function() {
+                options = {
+                    elems: $("<ul data-bind='sortable: items'><li data-bind='text: $data'></li></ul>"),
+                    vm: {
+                        items: ko.observableArray([1, 2, 3]),
+                        isEnabled: ko.observable(false)
+                    }
+                };
+            });
+
+            describe("when isEnabled is an observable", function() {
+                beforeEach(function() {
+                    ko.bindingHandlers.sortable.isEnabled = options.vm.isEnabled;
+                    setup(options);
+                });
+
+                it("should be initially disabled", function() {
+                    expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                });
+
+                it("should become enabled when observable is changed to true", function() {
+                    options.vm.isEnabled(true);
+                    expect(options.root.sortable("option", "disabled")).toBeFalsy();
+                })
+            });
+
+            describe("when isEnabled is a non-observable", function() {
+                beforeEach(function() {
+                    ko.bindingHandlers.sortable.isEnabled = false;
+                    setup(options);
+                });
+
+                it("should be initially disabled", function() {
+                    expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                });
+            });
+        });
+
+        describe("when setting isEnabled in the binding", function() {
+            var options;
+            beforeEach(function() {
+                options = {
+                    elems: $("<ul data-bind='sortable: { data: items, isEnabled: isEnabled }'><li data-bind='text: $data'></li></ul>"),
+                    vm: {
+                        items: ko.observableArray([1, 2, 3]),
+                        isEnabled: ko.observable(false)
+                    }
+                };
+            });
+
+            describe("when isEnabled is an observable", function() {
+                beforeEach(function() {
+                    setup(options);
+                });
+
+                it("should be initially disabled", function() {
+                    expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                });
+
+                it("should become enabled when observable is changed to true", function() {
+                    options.vm.isEnabled(true);
+                    expect(options.root.sortable("option", "disabled")).toBeFalsy();
+                })
+            });
+
+            describe("when isEnabled is a non-observable", function() {
+                beforeEach(function() {
+                    options.vm.isEnabled = false;
+                    setup(options);
+                });
+
+                it("should be initially disabled", function() {
+                    expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                });
+            });
+        });
+
         describe("when passing extra options for .sortable in the binding", function() {
             var options;
 
             beforeEach(function() {
                 options = {
-                    elems: $("<ul data-bind='sortable: { data: items, options: { disabled: true } }'><li data-bind='text: $data'></li></ul>"),
+                    elems: $("<ul data-bind='sortable: { data: items, options: { axis: \"x\" } }'><li data-bind='text: $data'></li></ul>"),
                     vm: { items: ko.observableArray([1, 2, 3]) }
                 };
 
@@ -370,7 +449,7 @@ describe("knockout-sortable", function(){
             });
 
             it("should pass the option on to .sortable properly", function() {
-                expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                expect(options.root.sortable("option", "axis")).toEqual('x');
             });
         });
 
@@ -383,13 +462,13 @@ describe("knockout-sortable", function(){
                     vm: { items: ko.observableArray([1, 2, 3]) }
                 };
 
-                ko.bindingHandlers.sortable.options = { disabled: true };
+                ko.bindingHandlers.sortable.options = { axis: 'x' };
 
                 setup(options);
             });
 
             it("should pass the option on to .sortable properly", function() {
-                expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                expect(options.root.sortable("option", "axis")).toEqual('x');
             });
         });
     });

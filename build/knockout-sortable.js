@@ -42,25 +42,20 @@ ko.bindingHandlers.sortable = {
         var $element = $(element),
             value = ko.utils.unwrapObservable(valueAccessor()),
             templateOptions = prepareTemplateOptions(valueAccessor),
-            sortable = ko.bindingHandlers.sortable,
-            connectClass = value.connectClass !== undefined ? value.connectClass : sortable.connectClass,
-            allowDrop = value.allowDrop === undefined ? sortable.allowDrop : value.allowDrop,
-            beforeMove = value.beforeMove || sortable.beforeMove,
-            afterMove = value.afterMove || sortable.afterMove,
-            options = value.options || sortable.options;
+            sortable = ko.utils.extend(ko.bindingHandlers.sortable, value || {});
 
         //if allowDrop is an observable or a function, then execute it in a computed observable
-        if (connectClass && (ko.isObservable(allowDrop) || typeof allowDrop == "function")) {
+        if (sortable.connectClass && (ko.isObservable(sortable.allowDrop) || typeof sortable.allowDrop == "function")) {
             ko.computed({
                read: function() {
-                   var value = ko.utils.unwrapObservable(allowDrop),
+                   var value = ko.utils.unwrapObservable(sortable.allowDrop),
                        shouldAdd = typeof value == "function" ? value.call(this, templateOptions.foreach) : value;
-                   ko.utils.toggleDomNodeCssClass(element, connectClass, shouldAdd);
+                   ko.utils.toggleDomNodeCssClass(element, sortable.connectClass, shouldAdd);
                },
                disposeWhenNodeIsRemoved: element
             }, this);
         } else {
-            ko.utils.toggleDomNodeCssClass(element, connectClass, allowDrop);
+            ko.utils.toggleDomNodeCssClass(element, sortable.connectClass, sortable.allowDrop);
         }
 
         //attach meta-data
@@ -78,7 +73,7 @@ ko.bindingHandlers.sortable = {
         });
 
         //initialize sortable binding
-        $element.sortable(ko.utils.extend(options, {
+        $element.sortable(ko.utils.extend(sortable.options, {
             update: function(event, ui) {
                 var sourceParent, targetParent, targetIndex, arg,
                     el = ui.item[0],
@@ -90,7 +85,7 @@ ko.bindingHandlers.sortable = {
                     targetParent = ko.utils.domData.get(el.parentNode, listKey);
                     targetIndex = ko.utils.arrayIndexOf(ui.item.parent().children(), el);
 
-                    if (beforeMove || afterMove) {
+                    if (sortable.beforeMove || sortable.afterMove) {
                         arg = {
                             item: item,
                             sourceParent: sourceParent,
@@ -101,8 +96,8 @@ ko.bindingHandlers.sortable = {
                         };
                     }
 
-                    if (beforeMove) {
-                        beforeMove.call(this, arg, event, ui);
+                    if (sortable.beforeMove) {
+                        sortable.beforeMove.call(this, arg, event, ui);
                         if (arg.cancelDrop) {
                             $(ui.sender).sortable('cancel');
                             return;
@@ -119,13 +114,23 @@ ko.bindingHandlers.sortable = {
                     ui.item.remove();
 
                     //allow binding to accept a function to execute after moving the item
-                    if (afterMove) {
-                       afterMove.call(this, arg, event, ui);
+                    if (sortable.afterMove) {
+                       sortable.afterMove.call(this, arg, event, ui);
                     }
                 }
             },
-            connectWith: connectClass ? "." + connectClass : false
+            connectWith: sortable.connectClass ? "." + sortable.connectClass : false
         }));
+
+        //handle enabling/disabling sorting
+        if (sortable.isEnabled !== undefined) {
+            ko.computed({
+                read: function() {
+                    $element.sortable(ko.utils.unwrapObservable(sortable.isEnabled) ? "enable" : "disable");
+                },
+                disposeWhenNodeIsRemoved: element
+            });
+        }
 
         //handle disposal
         ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
