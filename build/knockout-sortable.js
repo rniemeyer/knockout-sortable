@@ -42,7 +42,11 @@ ko.bindingHandlers.sortable = {
         var $element = $(element),
             value = ko.utils.unwrapObservable(valueAccessor()),
             templateOptions = prepareTemplateOptions(valueAccessor),
-            sortable = ko.utils.extend(ko.bindingHandlers.sortable, value || {});
+            sortable = {};
+
+        //build a new object that has the global options with overrides from the binding
+        ko.utils.extend(sortable, ko.bindingHandlers.sortable);
+        ko.utils.extend(sortable, value || {});
 
         //if allowDrop is an observable or a function, then execute it in a computed observable
         if (sortable.connectClass && (ko.isObservable(sortable.allowDrop) || typeof sortable.allowDrop == "function")) {
