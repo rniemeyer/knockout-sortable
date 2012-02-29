@@ -93,6 +93,7 @@ ko.bindingHandlers.sortable = {
                         arg = {
                             item: item,
                             sourceParent: sourceParent,
+                            sourceParentNode: el.parentNode,
                             sourceIndex: sourceParent.indexOf(item),
                             targetParent: targetParent,
                             targetIndex: targetIndex,

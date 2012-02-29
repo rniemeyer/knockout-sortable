@@ -30,6 +30,7 @@
     * `arg.item` - the actual item being moved
     * `arg.sourceIndex` - the position of the item in the original observableArray
     * `arg.sourceParent` - the original observableArray
+    * `arg.sourceParentNode` - the container node of the original list
     * `arg.targetIndex` - the position of the item in the destination observableArray
     * `arg.targetParent` - the destination observableArray
     * `arg.cancelDrop` - this defaults to false and can be set to true to indicate that the drop should be cancelled.
@@ -40,6 +41,7 @@
     * `arg.item` - the actual item being moved
     * `arg.sourceIndex` - the position of the item in the original observableArray
     * `arg.sourceParent` - the original observableArray
+    * `arg.sourceParentNode` - the container node of the original list.  Useful if moving items between lists, but within a single array.  The value of `this` in the callback will be the target container node.
     * `arg.targetIndex` - the position of the item in the destination observableArray
     * `arg.targetParent` - the destination observableArray
 
