@@ -82,6 +82,9 @@ ko.bindingHandlers.sortable = {
                 var sourceParent, targetParent, targetIndex, arg,
                     el = ui.item[0],
                     item = ko.utils.domData.get(el, itemKey);
+                    
+                //give access to parent node
+                var elParentNode = el.parentNode;
 
                 if (item) {
                     //identify parents
@@ -119,7 +122,7 @@ ko.bindingHandlers.sortable = {
 
                     //allow binding to accept a function to execute after moving the item
                     if (sortable.afterMove) {
-                       sortable.afterMove.call(this, arg, event, ui);
+                       sortable.afterMove.call(this, arg, event, ui, elParentNode);
                     }
                 }
             },
