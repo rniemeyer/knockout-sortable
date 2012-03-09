@@ -98,7 +98,11 @@ describe("knockout-sortable", function(){
             });
 
             it("should call .sortable on the root element", function() {
-                expect(options.root.data("sortable")).toBeDefined();
+                waits(0);
+                runs(function() {
+                    expect(options.root.data("sortable")).toBeDefined();
+                });
+                
             });
 
             it("should attach meta-data to the root element indicating the parent observableArray", function() {
@@ -275,7 +279,10 @@ describe("knockout-sortable", function(){
                 });
                 
                 it("should set this element's sortable connectWith option to false", function() {
-                    expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                    waits(0);
+                    runs(function() {
+                        expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                    }); 
                 });
             });
             
@@ -290,10 +297,12 @@ describe("knockout-sortable", function(){
                 });
                 
                 it("should set this element's sortable connectWith option to false", function() {
-                    expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                    waits(0);
+                    runs(function() {
+                        expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                    });
                 });
             });
-
         });
 
         describe("when overriding connectClass in the binding options", function() {
@@ -333,7 +342,10 @@ describe("knockout-sortable", function(){
                 });
                 
                 it("should set this element's sortable connectWith option to false", function() {
-                    expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                    waits(0);
+                    runs(function() {
+                        expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                    });
                 });
             });
             
@@ -352,7 +364,10 @@ describe("knockout-sortable", function(){
                 });
                 
                 it("should set this element's sortable connectWith option to false", function() {
-                    expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                    waits(0);
+                    runs(function() {
+                        expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                    });
                 });
             });
         });
@@ -376,12 +391,18 @@ describe("knockout-sortable", function(){
                 });
 
                 it("should be initially disabled", function() {
-                    expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                    waits(0);
+                    runs(function() {
+                        expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                    });
                 });
 
                 it("should become enabled when observable is changed to true", function() {
-                    options.vm.isEnabled(true);
-                    expect(options.root.sortable("option", "disabled")).toBeFalsy();
+                    waits(0);
+                    runs(function() {
+                        options.vm.isEnabled(true);
+                        expect(options.root.sortable("option", "disabled")).toBeFalsy();
+                    });
                 })
             });
 
@@ -392,7 +413,10 @@ describe("knockout-sortable", function(){
                 });
 
                 it("should be initially disabled", function() {
-                    expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                    waits(0);
+                    runs(function() {
+                        expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                    });
                 });
             });
         });
@@ -415,12 +439,18 @@ describe("knockout-sortable", function(){
                 });
 
                 it("should be initially disabled", function() {
-                    expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                    waits(0);
+                    runs(function() {
+                        expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                    });
                 });
 
                 it("should become enabled when observable is changed to true", function() {
-                    options.vm.isEnabled(true);
-                    expect(options.root.sortable("option", "disabled")).toBeFalsy();
+                    waits(0);
+                    runs(function() {
+                        options.vm.isEnabled(true);
+                        expect(options.root.sortable("option", "disabled")).toBeFalsy();                    
+                    });
                 })
             });
 
@@ -431,7 +461,10 @@ describe("knockout-sortable", function(){
                 });
 
                 it("should be initially disabled", function() {
-                    expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                    waits(0);
+                    runs(function() {
+                        expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                    });
                 });
             });
         });
@@ -449,7 +482,10 @@ describe("knockout-sortable", function(){
             });
 
             it("should pass the option on to .sortable properly", function() {
-                expect(options.root.sortable("option", "axis")).toEqual('x');
+                waits(0);
+                runs(function() {
+                    expect(options.root.sortable("option", "axis")).toEqual('x');
+                });
             });
         });
 
@@ -468,8 +504,47 @@ describe("knockout-sortable", function(){
             });
 
             it("should pass the option on to .sortable properly", function() {
-                expect(options.root.sortable("option", "axis")).toEqual('x');
+                waits(0);
+                runs(function() {
+                    expect(options.root.sortable("option", "axis")).toEqual('x');
+                });
             });
         });
-    });
+        
+        describe("when using a computed observable to return an observableArray", function() {
+            var options;
+            
+            beforeEach(function() {
+                options = {
+                    elems: $("<ul data-bind='sortable: activeList()'><li data-bind='text: $data'></li></ul>"),
+                    vm: { 
+                        itemsOne: ko.observableArray([1, 2, 3]),
+                        itemsTwo: ko.observableArray(["a", "b", "c"]),
+                        useTwo: ko.observable(false)
+                    }
+                };
+                
+                options.vm.activeList = ko.computed(function() {
+                    return this.useTwo() ? this.itemsTwo : this.itemsOne;
+                }, options.vm);
+
+                setup(options);
+            });
+            
+            it("should render the initial list", function() {
+                expect(options.root.children().first().text()).toEqual("1");
+                expect(options.root.children(":nth-child(2)").text()).toEqual("2");
+                expect(options.root.children(":nth-child(3)").text()).toEqual("3");
+            });
+            
+            describe("when updating the list that is returned by the computed observable", function() {
+                it("should render the new list", function() {
+                    options.vm.useTwo(true);
+                    expect(options.root.children().first().text()).toEqual("a");
+                    expect(options.root.children(":nth-child(2)").text()).toEqual("b");
+                    expect(options.root.children(":nth-child(3)").text()).toEqual("c");
+                });
+            });
+        });
+    }); 
 });

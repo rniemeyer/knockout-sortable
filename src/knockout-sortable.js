@@ -62,80 +62,71 @@ ko.bindingHandlers.sortable = {
             ko.utils.toggleDomNodeCssClass(element, sortable.connectClass, sortable.allowDrop);
         }
 
-        //attach meta-data
-        ko.utils.domData.set(element, listKey, templateOptions.foreach);
-
         //wrap the template binding
-        var templateArgs = [element, function() { return templateOptions; }, allBindingsAccessor, data, context];
-        ko.bindingHandlers.template.init.apply(this, templateArgs);
-        ko.computed({
-            read: function() {
-                ko.bindingHandlers.template.update.apply(this, templateArgs);
-            },
-            disposeWhenNodeIsRemoved: element,
-            owner: this
-        });
+        ko.bindingHandlers.template.init(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
 
-        //initialize sortable binding
-        $element.sortable(ko.utils.extend(sortable.options, {
-            update: function(event, ui) {
-                var sourceParent, targetParent, targetIndex, arg,
-                    el = ui.item[0],
-                    item = ko.utils.domData.get(el, itemKey);
+        //initialize sortable binding after template binding has rendered in update function
+        setTimeout(function() {
+            $element.sortable(ko.utils.extend(sortable.options, {
+                update: function(event, ui) {
+                    var sourceParent, targetParent, targetIndex, arg,
+                        el = ui.item[0],
+                        item = ko.utils.domData.get(el, itemKey);
 
-                if (item) {
-                    //identify parents
-                    sourceParent = ko.utils.domData.get(el, parentKey);
-                    targetParent = ko.utils.domData.get(el.parentNode, listKey);
-                    targetIndex = ko.utils.arrayIndexOf(ui.item.parent().children(), el);
+                    if (item) {
+                        //identify parents
+                        sourceParent = ko.utils.domData.get(el, parentKey);
+                        targetParent = ko.utils.domData.get(el.parentNode, listKey);
+                        targetIndex = ko.utils.arrayIndexOf(ui.item.parent().children(), el);
 
-                    if (sortable.beforeMove || sortable.afterMove) {
-                        arg = {
-                            item: item,
-                            sourceParent: sourceParent,
-                            sourceParentNode: el.parentNode,
-                            sourceIndex: sourceParent.indexOf(item),
-                            targetParent: targetParent,
-                            targetIndex: targetIndex,
-                            cancelDrop: false
-                        };
-                    }
+                        if (sortable.beforeMove || sortable.afterMove) {
+                            arg = {
+                                item: item,
+                                sourceParent: sourceParent,
+                                sourceParentNode: el.parentNode,
+                                sourceIndex: sourceParent.indexOf(item),
+                                targetParent: targetParent,
+                                targetIndex: targetIndex,
+                                cancelDrop: false
+                            };
+                        }
 
-                    if (sortable.beforeMove) {
-                        sortable.beforeMove.call(this, arg, event, ui);
-                        if (arg.cancelDrop) {
-                            $(ui.sender).sortable('cancel');
-                            return;
+                        if (sortable.beforeMove) {
+                            sortable.beforeMove.call(this, arg, event, ui);
+                            if (arg.cancelDrop) {
+                                $(ui.sender).sortable('cancel');
+                                return;
+                            }
+                        }
+
+                        if (targetIndex >= 0) {
+                            sourceParent.remove(item);
+                            targetParent.splice(targetIndex, 0, item);
+                        }
+
+                        //rendering is handled by manipulating the observableArray; ignore dropped element
+                        ko.utils.domData.set(el, itemKey, null);
+                        ui.item.remove();
+
+                        //allow binding to accept a function to execute after moving the item
+                        if (sortable.afterMove) {
+                           sortable.afterMove.call(this, arg, event, ui);
                         }
                     }
-
-                    if (targetIndex >= 0) {
-                        sourceParent.remove(item);
-                        targetParent.splice(targetIndex, 0, item);
-                    }
-
-                    //rendering is handled by manipulating the observableArray; ignore dropped element
-                    ko.utils.domData.set(el, itemKey, null);
-                    ui.item.remove();
-
-                    //allow binding to accept a function to execute after moving the item
-                    if (sortable.afterMove) {
-                       sortable.afterMove.call(this, arg, event, ui);
-                    }
-                }
-            },
-            connectWith: sortable.connectClass ? "." + sortable.connectClass : false
-        }));
-
-        //handle enabling/disabling sorting
-        if (sortable.isEnabled !== undefined) {
-            ko.computed({
-                read: function() {
-                    $element.sortable(ko.utils.unwrapObservable(sortable.isEnabled) ? "enable" : "disable");
                 },
-                disposeWhenNodeIsRemoved: element
-            });
-        }
+                connectWith: sortable.connectClass ? "." + sortable.connectClass : false
+            }));
+
+            //handle enabling/disabling sorting
+            if (sortable.isEnabled !== undefined) {
+                ko.computed({
+                    read: function() {
+                        $element.sortable(ko.utils.unwrapObservable(sortable.isEnabled) ? "enable" : "disable");
+                    },
+                    disposeWhenNodeIsRemoved: element
+                });
+            }
+        }, 0);
 
         //handle disposal
         ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
@@ -143,6 +134,15 @@ ko.bindingHandlers.sortable = {
         });
 
         return { 'controlsDescendantBindings': true };
+    },
+    update: function(element, valueAccessor, allBindingsAccessor, data, context) {
+        var templateOptions = prepareTemplateOptions(valueAccessor);
+
+        //attach meta-data
+        ko.utils.domData.set(element, listKey, templateOptions.foreach);
+
+        //call template binding's update with correct options
+        ko.bindingHandlers.template.update(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
     },
     afterRender: function(elements, data) {
         ko.utils.arrayForEach(elements, function(element) {
