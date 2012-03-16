@@ -44,6 +44,13 @@ ko.bindingHandlers.sortable = {
             templateOptions = prepareTemplateOptions(valueAccessor),
             sortable = {};
 
+        //remove leading/trailing text nodes from anonymous templates
+        ko.utils.arrayForEach(element.childNodes, function(node) {
+            if (node && node.nodeType === 3) {
+                node.parentNode.removeChild(node);
+            }
+        });
+
         //build a new object that has the global options with overrides from the binding
         ko.utils.extend(sortable, ko.bindingHandlers.sortable);
         ko.utils.extend(sortable, value || {});
