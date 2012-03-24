@@ -4,8 +4,8 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Draggable, droppable, and sortable list (2.0)</title>
 
-    <script type='text/javascript' src='http://code.jquery.com/jquery-1.5.js'></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.js"></script>
+    <script type='text/javascript' src='../ext/jquery-1.7.1.min.js'></script>
+    <script type="text/javascript" src="../ext/jquery-ui.min.js"></script>
 
     <script type='text/javascript' src="../ext/knockout-2.0.0.debug.js"></script>
     <script type='text/javascript' src="../build/knockout-sortable.min.js"></script>
@@ -75,8 +75,12 @@
         <h3>Tasks</h3>
         <div class="container" data-bind="sortable: tasks">
             <div class="item">
-                <a href="#" data-bind="text: name, click: $root.selectedTask, visible: $data !== $root.selectedTask()"></a>
-                <input data-bind="value: name, visibleAndSelect: $data === $root.selectedTask(), event: { blur: $root.clearTask }" />
+                <span data-bind="visible: !$root.isTaskSelected($data)">
+                    <a href="#" data-bind="text: name, click: $root.selectedTask"></a>
+                </span>
+                <span data-bind="visibleAndSelect: $root.isTaskSelected($data)">
+                    <input data-bind="value: name, event: { blur: $root.clearTask }" />
+                </span>  
             </div>
         </div>
         <a href="#" data-bind="click: addTask">Add Task</a>
@@ -92,7 +96,7 @@
     <script type='text/javascript'>
         var Task = function(name) {
             this.name = ko.observable(name);
-        }
+        };
 
         var ViewModel = function() {
             var self = this;
@@ -107,13 +111,23 @@
 
 
             self.selectedTask = ko.observable();
-            self.clearTask = function() {
-                self.selectedTask(null);
+            self.clearTask = function(data, event) {
+                if (data === self.selectedTask()) {
+                    self.selectedTask(null);
+                }
+
+                if (data.name() === "") {
+                   self.tasks.remove(data);
+                }
             };
             self.addTask = function() {
                 var task = new Task("new");
                 self.selectedTask(task);
                 self.tasks.push(task);
+            };
+
+            self.isTaskSelected = function(task) {
+               return task === self.selectedTask();
             };
         };
 
@@ -123,7 +137,7 @@
                 ko.bindingHandlers.visible.update(element, valueAccessor);
                 if (valueAccessor()) {
                     setTimeout(function() {
-                        $(element).focus().select();
+                        $(element).find("input").focus().select();
                     }, 0); //new tasks are not in DOM yet
                 }
             }

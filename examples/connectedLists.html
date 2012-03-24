@@ -4,8 +4,8 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Draggable, droppable, and sortable list (2.0)</title>
 
-    <script type='text/javascript' src='http://code.jquery.com/jquery-1.5.js'></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.js"></script>
+    <script type='text/javascript' src='../ext/jquery-1.7.1.min.js'></script>
+    <script type="text/javascript" src="../ext/jquery-ui.min.js"></script>
 
     <script type='text/javascript' src="../ext/knockout-2.0.0.debug.js"></script>
     <script type='text/javascript' src="../build/knockout-sortable.min.js"></script>
@@ -89,8 +89,12 @@
 
         <script id="taskTmpl" type="text/html">
             <div class="item">
-                <a href="#" data-bind="text: name, click: $root.selectedTask, visible: $data !== $root.selectedTask()"></a>
-                <input data-bind="value: name, visibleAndSelect: $data === $root.selectedTask(), event: { blur: $root.clearTask }"/>
+                 <span data-bind="visible: !$root.isTaskSelected($data)">
+                    <a href="#" data-bind="text: name, click: $root.selectedTask"></a>
+                </span>
+                <span data-bind="visibleAndSelect: $root.isTaskSelected($data)">
+                    <input data-bind="value: name, event: { blur: $root.clearTask }" />
+                </span>
             </div>
         </script>
     </div>
@@ -104,7 +108,7 @@
         <ul data-bind="foreach: normalPriorityTasks">
             <li data-bind="text: name"></li>
         </ul>
-    </div>
+    </div>​
 
     <script type='text/javascript'>
         //control visibility, give element focus, and select the contents (in order)
@@ -113,7 +117,7 @@
                 ko.bindingHandlers.visible.update(element, valueAccessor);
                 if (valueAccessor()) {
                     setTimeout(function () {
-                        $(element).focus().select();
+                        $(element).find("input").focus().select();
                     }, 0); //new tasks are not in DOM yet
                 }
             }
@@ -141,9 +145,21 @@
             self.normalPriorityTasks.id = "normal";
 
             self.selectedTask = ko.observable();
-            self.clearTask = function () {
-                self.selectedTask(null);
+            self.clearTask = function(data, event) {
+                if (data === self.selectedTask()) {
+                    self.selectedTask(null);
+                }
+
+                if (data.name() === "") {
+                   self.highPriorityTasks.remove(data);
+                   self.normalPriorityTasks.remove(data);
+                }
             };
+
+            self.isTaskSelected = function(task) {
+               return task === self.selectedTask();
+            };
+
             self.addTask = function () {
                 var task = new Task("new");
                 self.selectedTask(task);
@@ -153,8 +169,9 @@
             self.trash.id = "trash";
 
             self.myDropCallback = function (arg) {
-                console.log("arg", arg);
-                console.log("Moved '" + arg.item.name() + "' from " + arg.sourceParent.id + " (index: " + arg.sourceIndex + ") to " + arg.targetParent.id + " (index " + arg.targetIndex + ")");
+                if (console) {
+                    console.log("Moved '" + arg.item.name() + "' from " + arg.sourceParent.id + " (index: " + arg.sourceIndex + ") to " + arg.targetParent.id + " (index " + arg.targetIndex + ")");
+                }
             };
         };
 
