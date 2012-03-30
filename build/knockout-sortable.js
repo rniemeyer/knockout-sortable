@@ -72,9 +72,20 @@ ko.bindingHandlers.sortable = {
         //wrap the template binding
         ko.bindingHandlers.template.init(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
 
+        //keep a reference to start/update functions that might have been passed in
+        var startActual = sortable.options.start;
+        var updateActual = sortable.options.update;
+
         //initialize sortable binding after template binding has rendered in update function
         setTimeout(function() {
             $element.sortable(ko.utils.extend(sortable.options, {
+                start: function(event, ui) {
+                    //make sure that fields have a chance to lose focus to update model
+                    ui.item.filter(':visible').focus();
+                    if (startActual) {
+                        startActual.apply(this, arguments);
+                    }
+                },
                 update: function(event, ui) {
                     var sourceParent, targetParent, targetIndex, arg,
                         el = ui.item[0],
@@ -119,6 +130,10 @@ ko.bindingHandlers.sortable = {
                         if (sortable.afterMove) {
                            sortable.afterMove.call(this, arg, event, ui);
                         }
+                    }
+
+                    if (updateActual) {
+                        updateActual.apply(this, arguments);
                     }
                 },
                 connectWith: sortable.connectClass ? "." + sortable.connectClass : false
