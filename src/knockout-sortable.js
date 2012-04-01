@@ -112,7 +112,7 @@ ko.bindingHandlers.sortable = {
                         if (sortable.beforeMove) {
                             sortable.beforeMove.call(this, arg, event, ui);
                             if (arg.cancelDrop) {
-                                $(ui.sender).sortable('cancel');
+                                $(arg.sourceParent === arg.targetParent ? this : ui.sender).sortable('cancel');
                                 return;
                             }
                         }
