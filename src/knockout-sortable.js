@@ -8,11 +8,9 @@ var prepareTemplateOptions = function(valueAccessor) {
     if (options.data) {
         result.foreach = options.data;
         result.name = options.template;
-        result.afterAdd = options.afterAdd;
-        result.beforeRemove = options.beforeRemove;
-        result.afterRender = options.afterRender;
-        result.includeDestroyed = options.includeDestroyed;
-        result.templateEngine = options.templateEngine;
+        ko.utils.arrayForEach(["afterAdd", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions"], function (option) {
+            result[option] = options[option];
+        });
     } else {
         result.foreach = valueAccessor();
     }
