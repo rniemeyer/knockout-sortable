@@ -8,7 +8,7 @@ var prepareTemplateOptions = function(valueAccessor) {
     if (options.data) {
         result.foreach = options.data;
         result.name = options.template;
-        ko.utils.arrayForEach(["afterAdd", "beforeRemove", "afterRender", "includeDestroyed", "templateEngine", "templateOptions"], function (option) {
+        ko.utils.arrayForEach(["afterAdd", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions"], function (option) {
             result[option] = options[option];
         });
     } else {
@@ -78,8 +78,8 @@ ko.bindingHandlers.sortable = {
         setTimeout(function() {
             $element.sortable(ko.utils.extend(sortable.options, {
                 start: function(event, ui) {
-                    //make sure that fields have a chance to lose focus to update model
-                    ui.item.filter(':visible').focus();
+                    //make sure that fields have a chance to update model
+                    ui.item.find("input:focus").change();
                     if (startActual) {
                         startActual.apply(this, arguments);
                     }
