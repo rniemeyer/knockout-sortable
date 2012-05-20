@@ -38,7 +38,7 @@ var itemKey = "ko_sortItem",
 ko.bindingHandlers.sortable = {
     init: function(element, valueAccessor, allBindingsAccessor, data, context) {
         var $element = $(element),
-            value = ko.utils.unwrapObservable(valueAccessor()),
+            value = ko.utils.unwrapObservable(valueAccessor()) || {},
             templateOptions = prepareTemplateOptions(valueAccessor),
             sortable = {};
 
@@ -50,8 +50,12 @@ ko.bindingHandlers.sortable = {
         });
 
         //build a new object that has the global options with overrides from the binding
+        //taking care to merge jquery-ui.sortable (sub)options
         ko.utils.extend(sortable, ko.bindingHandlers.sortable);
-        ko.utils.extend(sortable, value || {});
+        if (value.options && ko.bindingHandlers.sortable.options) {
+          ko.utils.extend(value.options, ko.bindingHandlers.sortable.options);
+        }
+        ko.utils.extend(sortable, value);
 
         //if allowDrop is an observable or a function, then execute it in a computed observable
         if (sortable.connectClass && (ko.isObservable(sortable.allowDrop) || typeof sortable.allowDrop == "function")) {
