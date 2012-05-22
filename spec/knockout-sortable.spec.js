@@ -28,7 +28,8 @@ describe("knockout-sortable", function(){
         connectClass: ko.bindingHandlers.sortable.connectClass,
         allowDrop: ko.bindingHandlers.sortable.allowDrop,
         beforeMove: ko.bindingHandlers.sortable.beforeMove,
-        afterMove: ko.bindingHandlers.sortable.afterMove
+        afterMove: ko.bindingHandlers.sortable.afterMove,
+        afterRender: ko.bindingHandlers.sortable.afterRender
     };
 
     var setup = function(options) {
@@ -107,6 +108,86 @@ describe("knockout-sortable", function(){
 
             it("should attach meta-data to the root element indicating the parent observableArray", function() {
                 expect(ko.utils.domData.get(options.root[0], "ko_sortList")).toEqual(options.vm.items);
+            });
+
+            it("should attach meta-data to child elements indicating their item", function() {
+                expect(ko.utils.domData.get(options.root.children()[0], "ko_sortItem")).toEqual(options.vm.items()[0]);
+            });
+
+            it("should attach meta-data to child elements indicating their parent observableArray", function() {
+                expect(ko.utils.domData.get(options.root.children()[0], "ko_parentList")).toEqual(options.vm.items);
+            });
+        });
+
+        describe("when setting afterRender globally", function() {
+            describe("when passing just data", function() {
+                var afterRenderSpy;
+                beforeEach(function() {
+                    options = {
+                        elems: $("<ul data-bind='sortable: items'><li data-bind='text: $data'></li></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
+
+                    afterRenderSpy = jasmine.createSpy("afterRender spy");
+                    ko.bindingHandlers.sortable.afterRender = afterRenderSpy;
+                    setup(options);
+                });
+
+                it("should call the global afterRender on each item", function() {
+                    expect(afterRenderSpy.callCount).toEqual(3);
+                });
+
+                it("should attach meta-data to child elements indicating their item", function() {
+                    expect(ko.utils.domData.get(options.root.children()[0], "ko_sortItem")).toEqual(options.vm.items()[0]);
+                });
+
+                it("should attach meta-data to child elements indicating their parent observableArray", function() {
+                    expect(ko.utils.domData.get(options.root.children()[0], "ko_parentList")).toEqual(options.vm.items);
+                });
+            });
+
+            describe("when passing options", function() {
+                var afterRenderSpy;
+                beforeEach(function() {
+                    options = {
+                        elems: $("<ul data-bind='sortable: { data: items }'><li data-bind='text: $data'></li></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
+
+                    afterRenderSpy = jasmine.createSpy("afterRender spy");
+                    ko.bindingHandlers.sortable.afterRender = afterRenderSpy;
+                    setup(options);
+                });
+
+                it("should call the global afterRender on each item", function() {
+                    expect(afterRenderSpy.callCount).toEqual(3);
+                });
+
+                it("should attach meta-data to child elements indicating their item", function() {
+                    expect(ko.utils.domData.get(options.root.children()[0], "ko_sortItem")).toEqual(options.vm.items()[0]);
+                });
+
+                it("should attach meta-data to child elements indicating their parent observableArray", function() {
+                    expect(ko.utils.domData.get(options.root.children()[0], "ko_parentList")).toEqual(options.vm.items);
+                });
+            });
+        });
+
+        describe("when passing afterRender in options", function() {
+            var afterRenderSpy;
+            beforeEach(function() {
+                options = {
+                    elems: $("<ul data-bind='sortable: { data: items, afterRender: afterRenderSpy }'><li data-bind='text: $data'></li></ul>"),
+                    vm: { items: ko.observableArray([1, 2, 3]), afterRenderSpy: jasmine.createSpy("afterRender spy") }
+                };
+
+                //local afterRender will override this one
+                ko.bindingHandlers.sortable.afterRender = function() {};
+                setup(options);
+            });
+
+            it("should call the local afterRender on each item rather than the global one", function() {
+                expect(options.vm.afterRenderSpy.callCount).toEqual(3);
             });
 
             it("should attach meta-data to child elements indicating their item", function() {
