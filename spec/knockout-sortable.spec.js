@@ -591,6 +591,42 @@ describe("knockout-sortable", function(){
                 });
             });
         });
+
+        describe("when setting extra options for sortable globally and locally", function() {
+            var options;
+
+            beforeEach(function() {
+                options = {
+                    elems: $("<ul data-bind='sortable: { data: items, options: { cursor: \"crosshair\", axis: \"y\" } }'><li data-bind='text: $data'></li></ul>"),
+                    vm: { items: ko.observableArray([1, 2, 3]) }
+                };
+
+                ko.bindingHandlers.sortable.options = { axis: 'x', delay: 100 };
+
+                setup(options);
+            });
+
+            it("should pass the local option rather than the global option to .sortable properly", function() {
+                waits(0);
+                runs(function() {
+                    expect(options.root.sortable("option", "axis")).toEqual('y');
+                });
+            });
+
+            it("should pass the local option on to .sortable properly", function() {
+                waits(0);
+                runs(function() {
+                    expect(options.root.sortable("option", "cursor")).toEqual('crosshair');
+                });
+            });
+
+            it("should pass the global option on to .sortable properly", function() {
+                waits(0);
+                runs(function() {
+                    expect(options.root.sortable("option", "delay")).toEqual(100);
+                });
+            });
+        });
         
         describe("when using a computed observable to return an observableArray", function() {
             var options;

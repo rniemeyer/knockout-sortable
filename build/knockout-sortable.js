@@ -52,7 +52,7 @@ var prepareTemplateOptions = function(valueAccessor) {
 ko.bindingHandlers.sortable = {
     init: function(element, valueAccessor, allBindingsAccessor, data, context) {
         var $element = $(element),
-            value = ko.utils.unwrapObservable(valueAccessor()),
+            value = ko.utils.unwrapObservable(valueAccessor()) || {},
             templateOptions = prepareTemplateOptions(valueAccessor),
             sortable = {},
             startActual, updateActual;
@@ -66,7 +66,11 @@ ko.bindingHandlers.sortable = {
 
         //build a new object that has the global options with overrides from the binding
         ko.utils.extend(sortable, ko.bindingHandlers.sortable);
-        ko.utils.extend(sortable, value || {});
+        if (value.options && sortable.options) {
+            ko.utils.extend(sortable.options, value.options);
+            delete value.options;
+        }
+        ko.utils.extend(sortable, value);
 
         //if allowDrop is an observable or a function, then execute it in a computed observable
         if (sortable.connectClass && (ko.isObservable(sortable.allowDrop) || typeof sortable.allowDrop == "function")) {
