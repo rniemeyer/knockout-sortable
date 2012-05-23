@@ -65,7 +65,7 @@ ko.bindingHandlers.sortable = {
         });
 
         //build a new object that has the global options with overrides from the binding
-        ko.utils.extend(sortable, ko.bindingHandlers.sortable);
+        $.extend(true, sortable, ko.bindingHandlers.sortable);
         if (value.options && sortable.options) {
             ko.utils.extend(sortable.options, value.options);
             delete value.options;
