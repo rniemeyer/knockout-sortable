@@ -7,7 +7,10 @@
 	"uglify": {},
 	"gzip": false,
 	"finalize": {
-		"header": "//knockout-sortable | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license"
+		"header": "//knockout-sortable | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license\n"
+	},
+	"wrap": {
+		"header": "//knockout-sortable | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license\n"
 	},
 	"hosts": {
 		"/examples": "./examples",

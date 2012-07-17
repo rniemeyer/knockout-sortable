@@ -104,7 +104,7 @@ ko.bindingHandlers.sortable = {
                     }
                 },
                 update: function(event, ui) {
-                    var sourceParent, targetParent, targetIndex, arg,
+                    var sourceParent, targetParent, targetIndex, i, targetUnwrapped, arg,
                         el = ui.item[0],
                         item = ko.utils.domData.get(el, ITEMKEY);
 
@@ -113,6 +113,17 @@ ko.bindingHandlers.sortable = {
                         sourceParent = ko.utils.domData.get(el, PARENTKEY);
                         targetParent = ko.utils.domData.get(el.parentNode, LISTKEY);
                         targetIndex = ko.utils.arrayIndexOf(ui.item.parent().children(), el);
+
+                        //take destroyed items into consideration
+                        if (!templateOptions.includeDestroyed) {
+                            targetUnwrapped = targetParent();
+                            for (i = 0; i < targetIndex; i++) {
+                                //add one for every destroyed item we find before the targetIndex in the target array
+                                if (targetUnwrapped[i] && targetUnwrapped[i]._destroy) {
+                                    targetIndex++;
+                                }
+                            }
+                        }
 
                         if (sortable.beforeMove || sortable.afterMove) {
                             arg = {
