@@ -663,5 +663,251 @@ describe("knockout-sortable", function(){
                 });
             });
         });
-    }); 
+    });
+
+    describe("draggable binding", function() {
+        var options,
+            defaults = {
+            connectClass: ko.bindingHandlers.draggable.connectClass,
+            isEnabled: ko.bindingHandlers.draggable.isEnabled
+        };
+
+        beforeEach(function() {
+            ko.utils.extend(ko.bindingHandlers.draggable.options, defaults);
+        });
+
+        describe("when using an anonymous template", function() {
+            beforeEach(function() {
+                options = {
+                    elems: $("<div data-bind='draggable: item'><span data-bind='text: first'></span></div>"),
+                    vm: { item: { first: ko.observable("Bob") } }
+                };
+
+                setup(options);
+            });
+
+            it("should render the content with the right context", function() {
+                expect(options.root.first().text()).toEqual("Bob");
+            });
+        });
+
+        describe("when using a named template", function() {
+            beforeEach(function() {
+                options = {
+                    elems: $("<div data-bind='draggable: { template: \"dragTmpl\", data: item }'></ul>"),
+                    vm: { item: { first: ko.observable("Bob") } },
+                    engine: ko.stringTemplateEngine()
+                };
+
+                options.engine.addTemplate("dragTmpl", "<span data-bind='text: first'></span>");
+                setup(options);
+            });
+
+            it("should render the template content properly", function(){
+                expect(options.root.first().text()).toEqual("Bob");
+            });
+        });
+
+        describe("when using the default options", function() {
+            beforeEach(function() {
+                options = {
+                    elems: $("<div data-bind='draggable: item'><span data-bind='text: first'></span></div>"),
+                    vm: { item: { first: ko.observable("Bob") } }
+                };
+
+                setup(options);
+            });
+
+            it("should add the draggable classes", function() {
+                expect(options.root.hasClass("ui-draggable")).toBeTruthy();
+            });
+
+            it("should call draggable on the element", function() {
+                expect(options.root.data("draggable")).toBeDefined();
+            });
+
+            it("should use the default connectClass", function() {
+                expect(options.root.draggable("option", "connectToSortable")).toEqual("." + defaults.connectClass);
+            });
+        });
+
+        describe("when overriding connectClass", function() {
+           describe("when overriding globally", function() {
+               beforeEach(function() {
+                   options = {
+                       elems: $("<div data-bind='draggable: item'><span data-bind='text: first'></span></div>"),
+                       vm: { item: { first: ko.observable("Bob") } }
+                   };
+
+                   ko.bindingHandlers.draggable.connectClass = "globalTest";
+
+                   setup(options);
+               });
+
+               it("should use the default connectClass", function() {
+                   expect(options.root.draggable("option", "connectToSortable")).toEqual("." + ko.bindingHandlers.draggable.connectClass);
+               });
+           });
+
+           describe("when overriding locally", function() {
+               beforeEach(function() {
+                   options = {
+                       elems: $("<div data-bind='draggable: { data: item, connectClass: connectClass }'><span data-bind='text: first'></span></div>"),
+                       vm: { item: { first: ko.observable("Bob") }, connectClass: "localTest" }
+                   };
+
+                   setup(options);
+               });
+
+               it("should use the default connectClass", function() {
+                   expect(options.root.draggable("option", "connectToSortable")).toEqual("." + options.vm.connectClass);
+               });
+           });
+        });
+
+        describe("when setting isEnabled", function() {
+            var options;
+
+            describe("when specifying in binding", function() {
+                describe("when using a non-observable", function() {
+                    beforeEach(function() {
+                        options = {
+                            elems: $("<div data-bind='draggable: { data: item, isEnabled: false }'><span data-bind='text: first'></span></div>"),
+                            vm: { item: { first: ko.observable("Bob") } }
+                        };
+
+                        setup(options);
+                    });
+
+                    it("should be marked as disabled", function() {
+                        expect(options.root.hasClass("ui-draggable-disabled")).toBeTruthy();
+                    });
+                });
+
+                describe("when using an observable", function() {
+                    beforeEach(function() {
+                        options = {
+                            elems: $("<div data-bind='draggable: { data: item, isEnabled: isEnabled }'><span data-bind='text: first'></span></div>"),
+                            vm: { item: { first: ko.observable("Bob") }, isEnabled: ko.observable(false) }
+                        };
+
+                        setup(options);
+                    });
+
+                    it("should be marked as disabled", function() {
+                        expect(options.root.hasClass("ui-draggable-disabled")).toBeTruthy();
+                    });
+
+                    describe("when updating the observable to true", function() {
+                        beforeEach(function() {
+                            options.vm.isEnabled(true);
+                        });
+
+                        it("should be marked as enabled", function() {
+                            expect(options.root.hasClass("ui-draggable-disabled")).toBeFalsy();
+                        });
+                    });
+                });
+            });
+
+            describe("when specifying globally", function() {
+                describe("when using a non-observable", function() {
+                    beforeEach(function() {
+                        options = {
+                            elems: $("<div data-bind='draggable: item'><span data-bind='text: first'></span></div>"),
+                            vm: { item: { first: ko.observable("Bob") } }
+                        };
+
+                        ko.bindingHandlers.draggable.isEnabled = false;
+
+                        setup(options);
+                    });
+
+                    it("should be marked as disabled", function() {
+                        expect(options.root.hasClass("ui-draggable-disabled")).toBeTruthy();
+                    });
+                });
+
+                describe("when using an observable", function() {
+                    beforeEach(function() {
+                        options = {
+                            elems: $("<div data-bind='draggable: item'><span data-bind='text: first'></span></div>"),
+                            vm: { item: { first: ko.observable("Bob") } }
+                        };
+
+                        ko.bindingHandlers.draggable.isEnabled = ko.observable(false);
+
+                        setup(options);
+                    });
+
+                    it("should be marked as disabled", function() {
+                        expect(options.root.hasClass("ui-draggable-disabled")).toBeTruthy();
+                    });
+
+                    describe("when updating the observable to true", function() {
+                        beforeEach(function() {
+                            ko.bindingHandlers.draggable.isEnabled(true);
+                        });
+
+                        it("should be marked as enabled", function() {
+                            expect(options.root.hasClass("ui-draggable-disabled")).toBeFalsy();
+                        });
+                    });
+                });
+            });
+        });
+
+        describe("when passing extra options", function() {
+            var options;
+
+            describe("when specifying in binding", function() {
+                beforeEach(function() {
+                    options = {
+                        elems: $("<div data-bind='draggable: { data: item, options: { delay: 150 } }'><span data-bind='text: first'></span></div>"),
+                        vm: { item: { first: ko.observable("Bob") } }
+                    };
+
+                    setup(options);
+                });
+
+                it("should use the option", function() {
+                    expect(options.root.draggable("option", "delay")).toEqual(150);
+                });
+            });
+
+            describe("when specifying globally", function() {
+                beforeEach(function() {
+                    options = {
+                        elems: $("<div data-bind='draggable: item'><span data-bind='text: first'></span></div>"),
+                        vm: { item: { first: ko.observable("Bob") } }
+                    };
+
+                    ko.bindingHandlers.draggable.options.delay = 175;
+
+                    setup(options);
+                });
+
+                it("should use the option", function() {
+                    expect(options.root.draggable("option", "delay")).toEqual(175);
+                });
+            });
+
+            describe("when specifying globally and overriding in binding", function() {
+                beforeEach(function() {
+                    options = {
+                        elems: $("<div data-bind='draggable: { data: item, options: { delay: 150 } }'><span data-bind='text: first'></span></div>"),
+                        vm: { item: { first: ko.observable("Bob") } }
+                    };
+
+                    setup(options);
+                });
+
+                ko.bindingHandlers.draggable.options.delay = 175;
+
+                it("should use the option specified in the binding", function() {
+                    expect(options.root.draggable("option", "delay")).toEqual(150);
+                });
+            });
+        });
+    });
 });

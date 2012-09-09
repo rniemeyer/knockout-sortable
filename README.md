@@ -53,6 +53,36 @@
 
 * **afterAdd, beforeRemove, afterRender, includeDestroyed, templateEngine** - this binding will pass these options on to the template binding.
 
+**Draggable binding**
+
+This library also includes a `draggable` binding that you can place on single items that can be moved into a `sortable` collection.  When the item is dropped into a sortable, the plugin will attempt to call a `clone` function on the item to make a suitable copy of it, otherwise it will use the item directly.
+
+* using anonymous templates:
+
+```html
+<div data-bind="draggable: item">
+  <span data-bind="text: name"></span>
+</div>
+```
+
+* using named templates:
+
+```html
+<div data-bind="draggable: { template: 'itemTmpl', data: item }"></div>
+<script id="itemTmpl" type="text/html">
+  <span data-bind="text: name"></span>
+</script>
+```
+
+**Additional Options**
+
+* **connectClass** - specify a class used to indicate which sortables that this draggable should be allowed to drop into.  The default class is "ko_container".  This value can be passed in the binding or configured globally by setting `ko.bindingHandlers.draggable.connectClass`.
+
+* **isEnabled** - specify whether the draggable widget should be enabled.  If this is an observable, then it will enable/disable the widget when the observable's value changes.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.draggable.isEnabled`.
+
+* **options** - specify any additional options to pass on to the `.draggable` jQuery UI call.  These options can be specified in the binding or specified globally by setting `ko.bindingHandlers.draggable.options`.
+
+
 **Dependencies**
 
 * Knockout 2.0+
@@ -67,6 +97,7 @@
 
 * simple: http://jsfiddle.net/rniemeyer/hw9B2/
 * connected: http://jsfiddle.net/rniemeyer/Jr2rE/
+* draggable: http://jsfiddle.net/rniemeyer/AC49j/
 * seating chart: http://jsfiddle.net/rniemeyer/UdXr4/
 
 
