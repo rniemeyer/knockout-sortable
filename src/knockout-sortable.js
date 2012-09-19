@@ -167,6 +167,9 @@
                             if (targetIndex >= 0) {
                                 if (sourceParent) {
                                     sourceParent.remove(item);
+                                    if (ko.processAllDeferredBindingUpdates) {
+                                        ko.processAllDeferredBindingUpdates();
+                                    }
                                 }
 
                                 targetParent.splice(targetIndex, 0, item);
@@ -175,6 +178,9 @@
                             //rendering is handled by manipulating the observableArray; ignore dropped element
                             ko.utils.domData.set(el, ITEMKEY, null);
                             ui.item.remove();
+                            if (ko.processAllDeferredBindingUpdates) {
+                                ko.processAllDeferredBindingUpdates();
+                            }
 
                             //allow binding to accept a function to execute after moving the item
                             if (sortable.afterMove) {
