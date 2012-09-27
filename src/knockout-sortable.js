@@ -1,4 +1,13 @@
-(function(ko, $, undefined) {
+(function(factory) {
+    // Support three module loading scenarios
+    if (typeof define === 'function' && define['amd']) {
+        // AMD anonymous module
+        define(['knockout', 'jquery', 'jquery.ui.sortable'], factory);
+    } else {
+        // No module loader (plain <script> tag) - put directly in global namespace
+        factory(window['knockout'], jQuery);
+    }
+})(function(ko, $, undefined) {
     var ITEMKEY = "ko_sortItem",
         LISTKEY = "ko_sortList",
         PARENTKEY = "ko_parentList",
@@ -271,4 +280,4 @@
         }
     };
 
-})(ko, jQuery);
+});
