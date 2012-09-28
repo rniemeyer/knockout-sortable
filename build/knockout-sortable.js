@@ -1,5 +1,13 @@
-//knockout-sortable 0.6.0 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
-(function(ko, $, undefined) {
+//knockout-sortable 0.6.5 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
+(function(factory) {
+    if (typeof define === "function" && define.amd) {
+        // AMD anonymous module
+        define(["knockout", "jquery", "jquery.ui.sortable"], factory);
+    } else {
+        // No module loader (plain <script> tag) - put directly in global namespace
+        factory(window.ko, jQuery);
+    }
+})(function(ko, $, undefined) {
     var ITEMKEY = "ko_sortItem",
         LISTKEY = "ko_sortList",
         PARENTKEY = "ko_parentList",
@@ -272,4 +280,4 @@
         }
     };
 
-})(ko, jQuery);
+});
