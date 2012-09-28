@@ -1,11 +1,10 @@
 (function(factory) {
-    // Support three module loading scenarios
-    if (typeof define === 'function' && define['amd']) {
+    if (typeof define === "function" && define.amd) {
         // AMD anonymous module
-        define(['knockout', 'jquery', 'jquery.ui.sortable'], factory);
+        define(["knockout", "jquery", "jquery.ui.sortable"], factory);
     } else {
         // No module loader (plain <script> tag) - put directly in global namespace
-        factory(window['knockout'], jQuery);
+        factory(window.ko, jQuery);
     }
 })(function(ko, $, undefined) {
     var ITEMKEY = "ko_sortItem",
