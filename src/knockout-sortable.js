@@ -127,7 +127,7 @@
 
                         dragItem = null;
 
-                        if (item) {
+                        if (this === ui.item.parent()[0] && item) {
                             //identify parents
                             sourceParent = ko.utils.domData.get(el, PARENTKEY);
                             targetParent = ko.utils.domData.get(el.parentNode, LISTKEY);

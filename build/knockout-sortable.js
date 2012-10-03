@@ -1,4 +1,4 @@
-//knockout-sortable 0.6.5 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
+//knockout-sortable 0.6.6 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
 (function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -128,7 +128,7 @@
 
                         dragItem = null;
 
-                        if (item) {
+                        if (this === ui.item.parent()[0] && item) {
                             //identify parents
                             sourceParent = ko.utils.domData.get(el, PARENTKEY);
                             targetParent = ko.utils.domData.get(el.parentNode, LISTKEY);
