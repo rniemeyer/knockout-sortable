@@ -175,6 +175,8 @@
                             if (targetIndex >= 0) {
                                 if (sourceParent) {
                                     sourceParent.remove(item);
+
+                                    //if using deferred updates plugin, force updates
                                     if (ko.processAllDeferredBindingUpdates) {
                                         ko.processAllDeferredBindingUpdates();
                                     }
@@ -186,6 +188,8 @@
                             //rendering is handled by manipulating the observableArray; ignore dropped element
                             ko.utils.domData.set(el, ITEMKEY, null);
                             ui.item.remove();
+
+                            //if using deferred updates plugin, force updates
                             if (ko.processAllDeferredBindingUpdates) {
                                 ko.processAllDeferredBindingUpdates();
                             }

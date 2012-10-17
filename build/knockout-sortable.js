@@ -1,4 +1,4 @@
-//knockout-sortable 0.6.6 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
+//knockout-sortable 0.6.7 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
 (function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -176,6 +176,11 @@
                             if (targetIndex >= 0) {
                                 if (sourceParent) {
                                     sourceParent.remove(item);
+
+                                    //if using deferred updates plugin, force updates
+                                    if (ko.processAllDeferredBindingUpdates) {
+                                        ko.processAllDeferredBindingUpdates();
+                                    }
                                 }
 
                                 targetParent.splice(targetIndex, 0, item);
@@ -184,6 +189,11 @@
                             //rendering is handled by manipulating the observableArray; ignore dropped element
                             ko.utils.domData.set(el, ITEMKEY, null);
                             ui.item.remove();
+
+                            //if using deferred updates plugin, force updates
+                            if (ko.processAllDeferredBindingUpdates) {
+                                ko.processAllDeferredBindingUpdates();
+                            }
 
                             //allow binding to accept a function to execute after moving the item
                             if (sortable.afterMove) {
