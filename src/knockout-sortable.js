@@ -104,7 +104,7 @@
             updateActual = sortable.options.update;
 
             //initialize sortable binding after template binding has rendered in update function
-            setTimeout(function() {
+            var createTimeout = setTimeout(function() {
                 var dragItem;
                 $element.sortable(ko.utils.extend(sortable.options, {
                     start: function(event, ui) {
@@ -220,7 +220,8 @@
 
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-                $element.sortable("destroy");
+                $element.data().sortable && $element.sortable("destroy"); // only call destroy if sortable has been created
+                clearTimeout(createTimeout); // do not create the sortable if the element has been removed from dom
             });
 
             return { 'controlsDescendantBindings': true };
