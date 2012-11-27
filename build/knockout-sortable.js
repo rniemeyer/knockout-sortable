@@ -1,4 +1,4 @@
-//knockout-sortable 0.6.7 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
+//knockout-sortable 0.7.0 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
 (function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -105,7 +105,7 @@
             updateActual = sortable.options.update;
 
             //initialize sortable binding after template binding has rendered in update function
-            setTimeout(function() {
+            var createTimeout = setTimeout(function() {
                 var dragItem;
                 $element.sortable(ko.utils.extend(sortable.options, {
                     start: function(event, ui) {
@@ -221,7 +221,13 @@
 
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-                $element.sortable("destroy");
+                //only call destroy if sortable has been created
+                if ($element.data("sortable")) {
+                    $element.sortable("destroy");
+                }
+
+                //do not create the sortable if the element has been removed from DOM
+                clearTimeout(createTimeout);
             });
 
             return { 'controlsDescendantBindings': true };
@@ -261,7 +267,6 @@
             ko.utils.extend(draggableOptions, options);
 
             //setup connection to a sortable
-
             draggableOptions.connectToSortable = connectClass ? "." + connectClass : false;
 
             //initialize draggable
