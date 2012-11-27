@@ -663,6 +663,23 @@ describe("knockout-sortable", function(){
                 });
             });
         });
+
+        describe("when removing the element before initialization", function() {
+           it("should not cause an error in disposal", function() {
+               console.log("test");
+               options = {
+                   elems: $("<ul data-bind='sortable: items'><li data-bind='text: $data'></li></ul>"),
+                   vm: {
+                       items: ko.observableArray([1, 2, 3])
+                   }
+               };
+
+               setup(options);
+
+               //remove node prior to the setTimeout to initialize the sortable runs
+               ko.removeNode(options.elems.first()[0]);
+           });
+        });
     });
 
     describe("draggable binding", function() {

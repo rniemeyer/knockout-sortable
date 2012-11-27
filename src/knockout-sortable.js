@@ -220,8 +220,13 @@
 
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-                $element.data().sortable && $element.sortable("destroy"); // only call destroy if sortable has been created
-                clearTimeout(createTimeout); // do not create the sortable if the element has been removed from dom
+                //only call destroy if sortable has been created
+                if ($element.data("sortable")) {
+                    $element.sortable("destroy");
+                }
+
+                //do not create the sortable if the element has been removed from DOM
+                clearTimeout(createTimeout);
             });
 
             return { 'controlsDescendantBindings': true };
@@ -261,7 +266,6 @@
             ko.utils.extend(draggableOptions, options);
 
             //setup connection to a sortable
-
             draggableOptions.connectToSortable = connectClass ? "." + connectClass : false;
 
             //initialize draggable
