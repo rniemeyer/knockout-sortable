@@ -47,15 +47,17 @@
 
     This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.afterMove`.  This callback also receives the `event` and `ui` objects as the second and third arguments.
 
+* **dragged** - specify a function to execute after a draggable item has been dropped into a sortable. This callback receives the drag item as the first argument, the `event` as the second argument, and the `ui` object as the third argument. If the function returns a value, then it will be used as item that is dropped into the sortable. This can be used as an alternative to the original item including a `clone` function.
+
 * **isEnabled** - specify whether the sortable widget should be enabled.  If this is an observable, then it will enable/disable the widget when the observable's value changes.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.isEnabled`.
 
 * **options** - specify any additional options to pass on to the `.sortable` jQuery UI call.  These options can be specified in the binding or specified globally by setting `ko.bindingHandlers.sortable.options`.
 
-* **afterAdd, beforeRemove, afterRender, includeDestroyed, templateEngine** - this binding will pass these options on to the template binding.
+* **afterAdd, beforeRemove, afterRender, includeDestroyed, templateEngine, as** - this binding will pass these options on to the template binding.
 
 **Draggable binding**
 
-This library also includes a `draggable` binding that you can place on single items that can be moved into a `sortable` collection.  When the item is dropped into a sortable, the plugin will attempt to call a `clone` function on the item to make a suitable copy of it, otherwise it will use the item directly.
+This library also includes a `draggable` binding that you can place on single items that can be moved into a `sortable` collection.  When the item is dropped into a sortable, the plugin will attempt to call a `clone` function on the item to make a suitable copy of it, otherwise it will use the item directly. Additionally, the `dragged` callback can be used to provide a copy of the object, as described above.
 
 * using anonymous templates:
 
