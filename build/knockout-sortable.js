@@ -37,7 +37,7 @@
             result[dataName] = valueAccessor();
         }
 
-        ko.utils.arrayForEach(["afterAdd", "afterRender", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions"], function (option) {
+        ko.utils.arrayForEach(["afterAdd", "afterRender", "as", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions"], function (option) {
             result[option] = options[option] || ko.bindingHandlers.sortable[option];
         });
 
@@ -117,8 +117,16 @@
                     },
                     receive: function(event, ui) {
                         dragItem = ko.utils.domData.get(ui.item[0], DRAGKEY);
-                        if (dragItem && dragItem.clone) {
-                            dragItem = dragItem.clone();
+                        if (dragItem) {
+                            //copy the model item, if a clone option is provided
+                            if (dragItem.clone) {
+                                dragItem = dragItem.clone();
+                            }
+
+                            //configure a handler to potentially manipulate item before drop
+                            if (sortable.dragged) {
+                                dragItem = sortable.dragged.call(this, dragItem, event, ui) || dragItem;
+                            }
                         }
                     },
                     update: function(event, ui) {
