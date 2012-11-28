@@ -36,7 +36,7 @@
             result[dataName] = valueAccessor();
         }
 
-        ko.utils.arrayForEach(["afterAdd", "afterRender", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions"], function (option) {
+        ko.utils.arrayForEach(["afterAdd", "afterRender", "as", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions"], function (option) {
             result[option] = options[option] || ko.bindingHandlers.sortable[option];
         });
 

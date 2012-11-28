@@ -47,38 +47,83 @@ describe("knockout-sortable", function(){
         });
 
         describe("when using an anonymous template", function(){
-            var options;
-
-            beforeEach(function() {
-                options = {
-                    elems: $("<ul data-bind='sortable: items'><li data-bind='text: $data'></li></ul>"),
-                    vm: { items: ko.observableArray([1, 2, 3]) }
-                };
+            it("should render all items", function(){
+                var children,
+                    options = {
+                        elems: $("<ul data-bind='sortable: items'><li data-bind='text: $data'></li></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
 
                 setup(options);
+
+                children = options.root.children();
+
+                expect(children.length).toEqual(3);
+                expect(children.eq(0).text()).toEqual("1");
+                expect(children.eq(1).text()).toEqual("2");
+                expect(children.eq(2).text()).toEqual("3");
             });
 
-            it("should render all items", function(){
-                expect(options.root.children().length).toEqual(3);
+            describe("when using 'as' to name the context", function() {
+                it("should allow referring to child items by 'as' name", function() {
+                    var children,
+                        options = {
+                            elems: $("<ul data-bind='sortable: { data: items, as: \"myitem\" }'><li data-bind=\"text: myitem\"></li></ul>"),
+                            vm: { items: ko.observableArray([1, 2, 3]) }
+                        };
+
+                    setup(options);
+
+                    children = options.root.children();
+
+                    expect(children.length).toEqual(3);
+                    expect(children.eq(0).text()).toEqual("1");
+                    expect(children.eq(1).text()).toEqual("2");
+                    expect(children.eq(2).text()).toEqual("3");
+                });
             });
         });
 
         describe("when using a named template", function() {
-            var options;
+            it("should render all items", function(){
+                var children,
+                    options = {
+                        elems: $("<ul data-bind='sortable: { template: \"itemTmpl\", data: items }'></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) },
+                        engine: ko.stringTemplateEngine()
+                    };
 
-            beforeEach(function() {
-                options = {
-                    elems: $("<ul data-bind='sortable: { template: \"itemTmpl\", data: items }'></ul>"),
-                    vm: { items: ko.observableArray([1, 2, 3]) },
-                    engine: ko.stringTemplateEngine()
-                };
-
-                options.engine.addTemplate("itemTmpl", "<li></li>");
+                options.engine.addTemplate("itemTmpl", "<li data-bind='text: $data'></li>");
                 setup(options);
+
+                children = options.root.children();
+
+                expect(children.length).toEqual(3);
+                expect(children.eq(0).text()).toEqual("1");
+                expect(children.eq(1).text()).toEqual("2");
+                expect(children.eq(2).text()).toEqual("3");
             });
 
-            it("should render all items", function(){
-                expect(options.root.children().length).toEqual(3);
+            describe("when using 'as' to name the context", function() {
+                it("should allow referring to child items by 'as' name", function() {
+                    var children,
+                        options = {
+                            elems: $("<ul data-bind='sortable: { template: \"itemTmpl\", data: items, as: \"myitem\" }'></ul>"),
+                            vm: { items: ko.observableArray([1, 2, 3]) },
+                            engine: ko.stringTemplateEngine()
+                        };
+
+                    options.engine.addTemplate("itemTmpl", "<li data-bind='text: myitem'></li>");
+
+                    setup(options);
+
+                    children = options.root.children();
+
+                    expect(children.length).toEqual(3);
+                    expect(children.eq(0).text()).toEqual("1");
+                    expect(children.eq(1).text()).toEqual("2");
+                    expect(children.eq(2).text()).toEqual("3");
+                })
             });
         });
 
