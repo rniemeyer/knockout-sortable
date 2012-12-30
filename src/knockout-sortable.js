@@ -135,7 +135,7 @@
 
                         dragItem = null;
 
-                        if (this === ui.item.parent()[0] && item) {
+    					if ( ( $(this).has(ui.item.parent()) || this === ui.item.parent()[0] ) && item) { // this allows to sort items in nested data structures
                             //identify parents
                             sourceParent = ko.utils.domData.get(el, PARENTKEY);
                             targetParent = ko.utils.domData.get(el.parentNode, LISTKEY);
