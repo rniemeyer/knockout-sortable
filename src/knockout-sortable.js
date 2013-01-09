@@ -131,11 +131,13 @@
                     update: function(event, ui) {
                         var sourceParent, targetParent, targetIndex, i, targetUnwrapped, arg,
                             el = ui.item[0],
+                            parentEl = ui.item.parent()[0],
                             item = ko.utils.domData.get(el, ITEMKEY) || dragItem;
 
                         dragItem = null;
 
-    					if ( ( $(this).has(ui.item.parent()) || this === ui.item.parent()[0] ) && item) { // this allows to sort items in nested data structures
+                        //make sure that moves only run once, as update fires on multiple containers
+                        if (item && (this === parentEl || $.contains(this, parentEl))) {
                             //identify parents
                             sourceParent = ko.utils.domData.get(el, PARENTKEY);
                             targetParent = ko.utils.domData.get(el.parentNode, LISTKEY);

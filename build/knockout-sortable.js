@@ -1,4 +1,4 @@
-//knockout-sortable 0.7.0 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
+//knockout-sortable 0.7.1 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
 (function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -132,11 +132,13 @@
                     update: function(event, ui) {
                         var sourceParent, targetParent, targetIndex, i, targetUnwrapped, arg,
                             el = ui.item[0],
+                            parentEl = ui.item.parent()[0],
                             item = ko.utils.domData.get(el, ITEMKEY) || dragItem;
 
                         dragItem = null;
 
-                        if (this === ui.item.parent()[0] && item) {
+                        //make sure that moves only run once, as update fires on multiple containers
+                        if (item && (this === parentEl || $.contains(this, parentEl))) {
                             //identify parents
                             sourceParent = ko.utils.domData.get(el, PARENTKEY);
                             targetParent = ko.utils.domData.get(el.parentNode, LISTKEY);
