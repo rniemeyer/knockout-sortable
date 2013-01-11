@@ -1,4 +1,4 @@
-//knockout-sortable 0.7.1 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
+//knockout-sortable 0.7.2 | (c) 2012 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
 (function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -11,7 +11,8 @@
     var ITEMKEY = "ko_sortItem",
         LISTKEY = "ko_sortList",
         PARENTKEY = "ko_parentList",
-        DRAGKEY = "ko_dragItem";
+        DRAGKEY = "ko_dragItem",
+        unwrap = ko.utils.unwrapObservable;
 
     //internal afterRender that adds meta-data to children
     var addMetaDataAfterRender = function(elements, data) {
@@ -26,7 +27,7 @@
     //prepare the proper options for the template binding
     var prepareTemplateOptions = function(valueAccessor, dataName) {
         var result = {},
-            options = ko.utils.unwrapObservable(valueAccessor()),
+            options = unwrap(valueAccessor()),
             actualAfterRender;
 
         //build our options to pass to the template engine
@@ -63,7 +64,7 @@
     ko.bindingHandlers.sortable = {
         init: function(element, valueAccessor, allBindingsAccessor, data, context) {
             var $element = $(element),
-                value = ko.utils.unwrapObservable(valueAccessor()) || {},
+                value = unwrap(valueAccessor()) || {},
                 templateOptions = prepareTemplateOptions(valueAccessor, "foreach"),
                 sortable = {},
                 startActual, updateActual;
@@ -87,7 +88,7 @@
             if (sortable.connectClass && (ko.isObservable(sortable.allowDrop) || typeof sortable.allowDrop == "function")) {
                 ko.computed({
                     read: function() {
-                        var value = ko.utils.unwrapObservable(sortable.allowDrop),
+                        var value = unwrap(sortable.allowDrop),
                             shouldAdd = typeof value == "function" ? value.call(this, templateOptions.foreach) : value;
                         ko.utils.toggleDomNodeCssClass(element, sortable.connectClass, shouldAdd);
                     },
@@ -149,7 +150,7 @@
                                 targetUnwrapped = targetParent();
                                 for (i = 0; i < targetIndex; i++) {
                                     //add one for every destroyed item we find before the targetIndex in the target array
-                                    if (targetUnwrapped[i] && targetUnwrapped[i]._destroy) {
+                                    if (targetUnwrapped[i] && unwrap(targetUnwrapped[i]._destroy)) {
                                         targetIndex++;
                                     }
                                 }
@@ -222,7 +223,7 @@
                 if (sortable.isEnabled !== undefined) {
                     ko.computed({
                         read: function() {
-                            $element.sortable(ko.utils.unwrapObservable(sortable.isEnabled) ? "enable" : "disable");
+                            $element.sortable(unwrap(sortable.isEnabled) ? "enable" : "disable");
                         },
                         disposeWhenNodeIsRemoved: element
                     });
@@ -261,7 +262,7 @@
     //create a draggable that is appropriate for dropping into a sortable
     ko.bindingHandlers.draggable = {
         init: function(element, valueAccessor, allBindingsAccessor, data, context) {
-            var value = ko.utils.unwrapObservable(valueAccessor()) || {},
+            var value = unwrap(valueAccessor()) || {},
                 options = value.options || {},
                 draggableOptions = ko.utils.extend({}, ko.bindingHandlers.draggable.options),
                 templateOptions = prepareTemplateOptions(valueAccessor, "data"),
@@ -286,7 +287,7 @@
             if (isEnabled !== undefined) {
                 ko.computed({
                     read: function() {
-                        $(element).draggable(ko.utils.unwrapObservable(isEnabled) ? "enable" : "disable");
+                        $(element).draggable(unwrap(isEnabled) ? "enable" : "disable");
                     },
                     disposeWhenNodeIsRemoved: element
                 });
