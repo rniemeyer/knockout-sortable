@@ -314,7 +314,7 @@
     			drop: function (event, ui) {
     				var sourceParent, targetParent, targetIndex, i, targetUnwrapped, arg,
 						   el = ui.draggable[0],
-						   item = ko.utils.domData.get(el, ITEMKEY);
+						   item = ko.utils.domData.get(el, ITEMKEY) || ko.utils.domData.get(el, DRAGKEY);
 
     				if (item && item.clone)
     					item = item.clone();
