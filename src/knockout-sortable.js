@@ -159,7 +159,7 @@
                                 arg = {
                                     item: item,
                                     sourceParent: sourceParent,
-                                    sourceParentNode: sourceParent && el.parentNode,
+                                    sourceParentNode: sourceParent && ui.sender || el.parentNode,
                                     sourceIndex: sourceParent && sourceParent.indexOf(item),
                                     targetParent: targetParent,
                                     targetIndex: targetIndex,
