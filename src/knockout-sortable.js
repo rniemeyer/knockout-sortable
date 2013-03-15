@@ -297,15 +297,15 @@
                 dropActual;
 
     		$.extend(true, droppable, ko.bindingHandlers.droppable);
-    		if (typeof value.length == "number") {
-    			droppable.data = value;
-    		} else {
+    		if (value.data) {
     			if (value.options && droppable.options) {
     				ko.utils.extend(droppable.options, value.options);
     				delete value.options;
     			}
     			ko.utils.extend(droppable, value);
-    		}
+    		} else {
+    			droppable.data = value;
+    		}   
     			   		
 
     		dropActual = droppable.options.drop;
@@ -322,7 +322,7 @@
     				if (item) {
     					sourceParent = ko.utils.domData.get(el, PARENTKEY);
     					targetParent = droppable.data
-    					targetIndex = 0;
+    					targetIndex;
 
     					if (droppable.beforeMove || droppable.afterMove) {
     						arg = {
@@ -342,11 +342,7 @@
     							//call cancel on the correct list
     							if (arg.sourceParent) {
     								$(arg.sourceParentNode).sortable('cancel');
-    							} //for a droppable item just remove the element
-    							else {
-    								$(el).remove();
     							}
-
     							return;
     						}
     						targetIndex = arg.targetIndex;
@@ -361,10 +357,13 @@
     						}
     					}
 
-    					if (targetIndex && targetIndex >= 0)
-    						targetParent.splice(targetIndex, 0, item);
-    					else
-    						targetParent.push(item);
+						//is the target an observableArray
+    					if (typeof targetParent.length == "number") {
+    						if (targetIndex && targetIndex >= 0)
+    							targetParent.splice(targetIndex, 0, item);
+    						else
+    							targetParent.push(item);
+    					}
 
     					//rendering is handled by manipulating the observableArray; ignore dropped element
     					ko.utils.domData.set(el, ITEMKEY, null);
@@ -384,8 +383,7 @@
     						dropActual.apply(this, arguments);
     					}
     				}
-    			},
-    			accept: droppable.options.accept ? droppable.options.accept : (droppable.connectClass ? "." + droppable.connectClass : "*")
+    			}
     		}));
 
     		//handle enabling/disabling
@@ -402,7 +400,6 @@
     	update: function (element, valueAccessor, allBindingsAccessor, data, context) {
 
     	},
-    	connectClass: 'ko_container',
     	targetIndex: null,
     	afterMove: null,
     	beforeMove: null,
