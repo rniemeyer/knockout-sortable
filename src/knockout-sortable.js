@@ -104,6 +104,14 @@
             startActual = sortable.options.start;
             updateActual = sortable.options.update;
 
+            // add helper object to keep widths correct when dragging table rows
+            sortable.options.helper = function(e, ui) {
+                ui.children().each(function() {
+                    $(this).width($(this).width());
+                });
+                return ui;
+            };
+
             //initialize sortable binding after template binding has rendered in update function
             var createTimeout = setTimeout(function() {
                 var dragItem;
