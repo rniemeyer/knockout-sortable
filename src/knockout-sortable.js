@@ -64,10 +64,13 @@
 
     var updateIndexFromDestroyedItems = function(index, items) {
         var unwrapped = unwrap(items);
-        for (var i = 0; i < index; i++) {
-            //add one for every destroyed item we find before the targetIndex in the target array
-            if (unwrapped[i] && unwrap(unwrapped[i]._destroy)) {
-                index++;
+
+        if (unwrapped) {
+            for (var i = 0; i < index; i++) {
+                //add one for every destroyed item we find before the targetIndex in the target array
+                if (unwrapped[i] && unwrap(unwrapped[i]._destroy)) {
+                    index++;
+                }
             }
         }
 
