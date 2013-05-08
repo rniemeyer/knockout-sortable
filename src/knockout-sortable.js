@@ -8,17 +8,20 @@
     }
 })(function(ko, $, undefined) {
     var ITEMKEY = "ko_sortItem",
+        INDEXKEY = "ko_sourceIndex",
         LISTKEY = "ko_sortList",
         PARENTKEY = "ko_parentList",
         DRAGKEY = "ko_dragItem",
-        unwrap = ko.utils.unwrapObservable;
+        unwrap = ko.utils.unwrapObservable,
+        dataGet = ko.utils.domData.get,
+        dataSet = ko.utils.domData.set;
 
     //internal afterRender that adds meta-data to children
     var addMetaDataAfterRender = function(elements, data) {
         ko.utils.arrayForEach(elements, function(element) {
             if (element.nodeType === 1) {
-                ko.utils.domData.set(element, ITEMKEY, data);
-                ko.utils.domData.set(element, PARENTKEY, ko.utils.domData.get(element.parentNode, LISTKEY));
+                dataSet(element, ITEMKEY, data);
+                dataSet(element, PARENTKEY, dataGet(element.parentNode, LISTKEY));
             }
         });
     };
@@ -57,6 +60,18 @@
 
         //return options to pass to the template binding
         return result;
+    };
+
+    var updateIndexFromDestroyedItems = function(index, items) {
+        var unwrapped = unwrap(items);
+        for (var i = 0; i < index; i++) {
+            //add one for every destroyed item we find before the targetIndex in the target array
+            if (unwrapped[i] && unwrap(unwrapped[i]._destroy)) {
+                index++;
+            }
+        }
+
+        return index;
     };
 
     //connect items with observableArrays
@@ -109,6 +124,10 @@
                 var dragItem;
                 $element.sortable(ko.utils.extend(sortable.options, {
                     start: function(event, ui) {
+                        //track original index
+                        var el = ui.item[0];
+                        dataSet(el, INDEXKEY, ko.utils.arrayIndexOf(ui.item.parent().children(), el));
+
                         //make sure that fields have a chance to update model
                         ui.item.find("input:focus").change();
                         if (startActual) {
@@ -116,7 +135,7 @@
                         }
                     },
                     receive: function(event, ui) {
-                        dragItem = ko.utils.domData.get(ui.item[0], DRAGKEY);
+                        dragItem = dataGet(ui.item[0], DRAGKEY);
                         if (dragItem) {
                             //copy the model item, if a clone option is provided
                             if (dragItem.clone) {
@@ -130,29 +149,25 @@
                         }
                     },
                     update: function(event, ui) {
-                        var sourceParent, targetParent, targetIndex, i, targetUnwrapped, arg,
+                        var sourceParent, targetParent, sourceIndex, targetIndex, arg,
                             el = ui.item[0],
                             parentEl = ui.item.parent()[0],
-                            item = ko.utils.domData.get(el, ITEMKEY) || dragItem;
+                            item = dataGet(el, ITEMKEY) || dragItem;
 
                         dragItem = null;
 
                         //make sure that moves only run once, as update fires on multiple containers
                         if (item && (this === parentEl || $.contains(this, parentEl))) {
                             //identify parents
-                            sourceParent = ko.utils.domData.get(el, PARENTKEY);
-                            targetParent = ko.utils.domData.get(el.parentNode, LISTKEY);
+                            sourceParent = dataGet(el, PARENTKEY);
+                            sourceIndex = dataGet(el, INDEXKEY);
+                            targetParent = dataGet(el.parentNode, LISTKEY);
                             targetIndex = ko.utils.arrayIndexOf(ui.item.parent().children(), el);
 
                             //take destroyed items into consideration
                             if (!templateOptions.includeDestroyed) {
-                                targetUnwrapped = targetParent();
-                                for (i = 0; i < targetIndex; i++) {
-                                    //add one for every destroyed item we find before the targetIndex in the target array
-                                    if (targetUnwrapped[i] && unwrap(targetUnwrapped[i]._destroy)) {
-                                        targetIndex++;
-                                    }
-                                }
+                                sourceIndex = updateIndexFromDestroyedItems(sourceIndex, sourceParent);
+                                targetIndex = updateIndexFromDestroyedItems(targetIndex, targetParent);
                             }
 
                             if (sortable.beforeMove || sortable.afterMove) {
@@ -160,7 +175,7 @@
                                     item: item,
                                     sourceParent: sourceParent,
                                     sourceParentNode: sourceParent && ui.sender || el.parentNode,
-                                    sourceIndex: sourceParent && sourceParent.indexOf(item),
+                                    sourceIndex: sourceIndex,
                                     targetParent: targetParent,
                                     targetIndex: targetIndex,
                                     cancelDrop: false
@@ -185,7 +200,7 @@
 
                             if (targetIndex >= 0) {
                                 if (sourceParent) {
-                                    sourceParent.remove(item);
+                                    sourceParent.splice(sourceIndex, 1);
 
                                     //if using deferred updates plugin, force updates
                                     if (ko.processAllDeferredBindingUpdates) {
@@ -197,7 +212,7 @@
                             }
 
                             //rendering is handled by manipulating the observableArray; ignore dropped element
-                            ko.utils.domData.set(el, ITEMKEY, null);
+                            dataSet(el, ITEMKEY, null);
                             ui.item.remove();
 
                             //if using deferred updates plugin, force updates
@@ -246,7 +261,7 @@
             var templateOptions = prepareTemplateOptions(valueAccessor, "foreach");
 
             //attach meta-data
-            ko.utils.domData.set(element, LISTKEY, templateOptions.foreach);
+            dataSet(element, LISTKEY, templateOptions.foreach);
 
             //call template binding's update with correct options
             ko.bindingHandlers.template.update(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
@@ -271,7 +286,7 @@
             value = value.data || value;
 
             //set meta-data
-            ko.utils.domData.set(element, DRAGKEY, value);
+            dataSet(element, DRAGKEY, value);
 
             //override global options with override options passed in
             ko.utils.extend(draggableOptions, options);
