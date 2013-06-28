@@ -1,4 +1,4 @@
-(function(factory) {
+;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
         define(["knockout", "jquery", "jquery.ui.sortable"], factory);

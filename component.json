@@ -1,6 +1,6 @@
 {
     "name": "knockout-sortable",
-    "version": "0.7.2",
+    "version": "0.8.1",
     "main": "./build/knockout-sortable.js",
     "dependencies": {
         "knockout": ">= 2.0",

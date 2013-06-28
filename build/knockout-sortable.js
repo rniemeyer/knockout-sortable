@@ -1,5 +1,5 @@
-//knockout-sortable 0.8.1 | (c) 2013 Ryan Niemeyer | http://www.opensource.org/licenses/mit-license
-(function(factory) {
+// knockout-sortable 0.8.1 | (c) 2013 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
         define(["knockout", "jquery", "jquery.ui.sortable"], factory);
