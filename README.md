@@ -91,6 +91,9 @@ This library also includes a `draggable` binding that you can place on single it
 * jQuery - no specific version identified yet as minimum
 * jQuery UI - no specific version identfied yet as minimum
 
+**Touch Support** - for touch support take a look at: http://touchpunch.furf.com/
+
+
 **Build:** This project uses [grunt](http://gruntjs.com/) for building/minifying.
 
 **Examples** The `examples` directory contains samples that include a simple sortable list, connected lists, and a seating chart that takes advantage of many of the additional options.
