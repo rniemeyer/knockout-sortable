@@ -64,6 +64,42 @@ describe("knockout-sortable", function(){
                 expect(children.eq(2).text()).toEqual("3");
             });
 
+            it("should strip top-level text nodes", function() {
+                var children,
+                    options = {
+                        elems: $("<ul data-bind='sortable: items'> <li data-bind='text: $data'> </li></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
+
+                setup(options);
+
+                //all children including text/comment nodes
+                children = options.root.contents();
+
+                expect(children.length).toEqual(3);
+                expect(children.eq(0).text()).toEqual("1");
+                expect(children.eq(1).text()).toEqual("2");
+                expect(children.eq(2).text()).toEqual("3");
+            });
+
+            it("should strip top-level comment nodes", function() {
+                var children,
+                    options = {
+                        elems: $("<ul data-bind='sortable: items'><!-- hello --><li data-bind='text: $data'> </li><!-- good bye --></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
+
+                setup(options);
+
+                //all children including text/comment nodes
+                children = options.root.contents();
+
+                expect(children.length).toEqual(3);
+                expect(children.eq(0).text()).toEqual("1");
+                expect(children.eq(1).text()).toEqual("2");
+                expect(children.eq(2).text()).toEqual("3");
+            });
+
             describe("when using 'as' to name the context", function() {
                 it("should allow referring to child items by 'as' name", function() {
                     var children,

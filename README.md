@@ -20,6 +20,8 @@
 </script>
 ```
 
+Note: The sortable binding assumes that the child "templates" have a single container element. You cannot use containerless bindings (comment-based) bindings at the top-level of your template, as the jQuery draggable/sortable functionality needs an element to operate on.
+
 **Additional Options**
 
 * **connectClass** - specify the class that should be used to indicate a droppable target.  The default class is "ko_container".  This value can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.connectClass`.

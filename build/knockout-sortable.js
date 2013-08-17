@@ -1,4 +1,4 @@
-// knockout-sortable 0.8.1 | (c) 2013 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.8.2 | (c) 2013 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -87,9 +87,9 @@
                 sortable = {},
                 startActual, updateActual;
 
-            //remove leading/trailing text nodes from anonymous templates
+            //remove leading/trailing non-elements from anonymous templates
             ko.utils.arrayForEach(element.childNodes, function(node) {
-                if (node && node.nodeType === 3) {
+                if (node && node.nodeType !== 1) {
                     node.parentNode.removeChild(node);
                 }
             });

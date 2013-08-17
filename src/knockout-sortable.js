@@ -86,9 +86,9 @@
                 sortable = {},
                 startActual, updateActual;
 
-            //remove leading/trailing text nodes from anonymous templates
+            //remove leading/trailing non-elements from anonymous templates
             ko.utils.arrayForEach(element.childNodes, function(node) {
-                if (node && node.nodeType === 3) {
+                if (node && node.nodeType !== 1) {
                     node.parentNode.removeChild(node);
                 }
             });
