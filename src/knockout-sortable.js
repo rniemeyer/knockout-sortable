@@ -358,7 +358,7 @@
     					}
 
 						//is the target an observableArray
-    					if (typeof targetParent.length == "number") {
+    					if (ko.isObservable(targetParent) && targetParent.splice != undefined) {
     						if (targetIndex && targetIndex >= 0)
     							targetParent.splice(targetIndex, 0, item);
     						else
