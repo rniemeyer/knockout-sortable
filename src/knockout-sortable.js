@@ -173,7 +173,7 @@
                                 targetIndex = updateIndexFromDestroyedItems(targetIndex, targetParent);
                             }
 
-                            if (sortable.beforeMove || sortable.afterMove) {
+                            if (sortable.beforeMove || sortable.afterMove || targetIndex >= 0) {
                                 arg = {
                                     item: item,
                                     sourceParent: sourceParent,
@@ -202,21 +202,8 @@
                             }
 
                             if (targetIndex >= 0) {
-                                if (sourceParent) {
-                                    sourceParent.splice(sourceIndex, 1);
-
-                                    //if using deferred updates plugin, force updates
-                                    if (ko.processAllDeferredBindingUpdates) {
-                                        ko.processAllDeferredBindingUpdates();
-                                    }
-                                }
-
-                                targetParent.splice(targetIndex, 0, item);
+                                updateItemLocation(arg);
                             }
-
-                            //rendering is handled by manipulating the observableArray; ignore dropped element
-                            dataSet(el, ITEMKEY, null);
-                            ui.item.remove();
 
                             //if using deferred updates plugin, force updates
                             if (ko.processAllDeferredBindingUpdates) {
@@ -323,4 +310,28 @@
         }
     };
 
+    function updateItemLocation(params) {
+        var sourceParentValue = ko.unwrap(params.sourceParent);
+        var targetParentValue = ko.unwrap(params.targetParent);
+        if (sourceParentValue) {
+            params.sourceParent.valueWillMutate();
+            sourceParentValue.splice(params.sourceIndex, 1);
+        }
+
+        if (sourceParentValue !== targetParentValue) {
+            params.targetParent.valueWillMutate();
+        }
+        targetParentValue.splice(params.targetIndex, 0, params.item);
+
+        if (targetParentValue === sourceParentValue) {
+            params.sourceParent.valueHasMutated();
+            //if using deferred updates plugin, force updates
+            if (ko.processAllDeferredBindingUpdates) {
+                ko.processAllDeferredBindingUpdates();
+            }
+        } else {
+            sourceParentValue && params.sourceParent.valueHasMutated();
+            params.targetParent.valueHasMutated();
+        }
+    }
 });
