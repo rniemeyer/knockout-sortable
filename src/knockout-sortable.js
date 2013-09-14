@@ -315,27 +315,34 @@
     };
 
     function updateItemLocation(params) {
-        var sourceParentValue = ko.unwrap(params.sourceParent);
-        var targetParentValue = ko.unwrap(params.targetParent);
+        var sourceParentValue = unwrap(params.sourceParent);
+        var targetParentValue = unwrap(params.targetParent);
         if (sourceParentValue) {
-            params.sourceParent.valueWillMutate();
+            tryToCall(params.sourceParent, 'valueWillMutate');
             sourceParentValue.splice(params.sourceIndex, 1);
         }
 
         if (sourceParentValue !== targetParentValue) {
-            params.targetParent.valueWillMutate();
+            tryToCall(params.targetParent, 'valueWillMutate');
         }
         targetParentValue.splice(params.targetIndex, 0, params.item);
 
         if (targetParentValue === sourceParentValue) {
-            params.sourceParent.valueHasMutated();
+            tryToCall(params.sourceParent, 'valueHasMutated');
             //if using deferred updates plugin, force updates
             if (ko.processAllDeferredBindingUpdates) {
                 ko.processAllDeferredBindingUpdates();
             }
         } else {
-            sourceParentValue && params.sourceParent.valueHasMutated();
-            params.targetParent.valueHasMutated();
+            sourceParentValue && tryToCall(params.sourceParent, 'valueHasMutated');
+            tryToCall(params.targetParent, 'valueHasMutated');
         }
+    }
+
+    function tryToCall(object, method) {
+        if (typeof object[method] === 'function') {
+            return object[method]();
+        }
+        return null;
     }
 });
