@@ -203,6 +203,10 @@
 
                             if (targetIndex >= 0) {
                                 updateItemLocation(arg);
+                                if (sourceParent !== targetParent) {
+                                    // if arrays are different rendering is processed by foreach
+                                    ui.item.remove();
+                                }
                             }
 
                             //if using deferred updates plugin, force updates
