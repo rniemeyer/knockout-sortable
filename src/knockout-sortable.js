@@ -6,7 +6,7 @@
         // No module loader (plain <script> tag) - put directly in global namespace
         factory(window.ko, jQuery);
     }
-})(function(ko, $, undefined) {
+})(function(ko, $) {
     var ITEMKEY = "ko_sortItem",
         INDEXKEY = "ko_sourceIndex",
         LISTKEY = "ko_sortList",

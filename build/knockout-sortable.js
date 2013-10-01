@@ -1,4 +1,4 @@
-// knockout-sortable 0.8.2 | (c) 2013 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.8.3 | (c) 2013 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -7,7 +7,7 @@
         // No module loader (plain <script> tag) - put directly in global namespace
         factory(window.ko, jQuery);
     }
-})(function(ko, $, undefined) {
+})(function(ko, $) {
     var ITEMKEY = "ko_sortItem",
         INDEXKEY = "ko_sourceIndex",
         LISTKEY = "ko_sortList",
