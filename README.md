@@ -49,6 +49,16 @@ Note: The sortable binding assumes that the child "templates" have a single cont
 
     This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.afterMove`.  This callback also receives the `event` and `ui` objects as the second and third arguments.
 
+* **hovering** - specify a function to execute while an item is being dragged over a potential location.  This function receives an object for its first argument that contains the following information:
+    * `arg.item` - the actual item being moved
+    * `arg.sourceIndex` - the position of the item in the original observableArray
+    * `arg.sourceParent` - the original observableArray
+    * `arg.sourceParentNode` - the container node of the original list.  Useful if moving items between lists, but within a single array.  The value of `this` in the callback will be the target container node.
+    * `arg.targetIndex` - the targeted position of the item in the destination observableArray
+    * `arg.targetParent` - the destination observableArray
+
+    This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.afterMove`.  This callback also receives the `event` and `ui` objects as the second and third arguments. Warning: this callback might be called multiple times for the same target location.
+
 * **dragged** - specify a function to execute after a draggable item has been dropped into a sortable. This callback receives the drag item as the first argument, the `event` as the second argument, and the `ui` object as the third argument. If the function returns a value, then it will be used as item that is dropped into the sortable. This can be used as an alternative to the original item including a `clone` function.
 
 * **isEnabled** - specify whether the sortable widget should be enabled.  If this is an observable, then it will enable/disable the widget when the observable's value changes.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.isEnabled`.
