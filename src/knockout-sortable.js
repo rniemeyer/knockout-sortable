@@ -137,6 +137,31 @@
                             startActual.apply(this, arguments);
                         }
                     },
+                    over: function(event, ui) {
+                        if(!sortable.hovering)
+                            return;
+                        var sourceParent, targetParent, sourceIndex, targetIndex, arg,
+                            el = ui.item[0],
+                            placeHolderEl = ui.placeholder[0],
+                            item = dataGet(el, ITEMKEY) || dragItem;
+
+                        sourceParent = dataGet(el, PARENTKEY);
+                        sourceIndex = dataGet(el, INDEXKEY);
+                        targetParent = dataGet(placeHolderEl.parentNode, LISTKEY);
+                        targetIndex = ko.utils.arrayIndexOf(ui.placeholder.parent().children(), placeHolderEl);
+                        if (sourceParent === targetParent && targetIndex > sourceIndex)
+                            targetIndex--;
+
+                        arg = {
+                            item: item,
+                            sourceParent: sourceParent,
+                            sourceParentNode: sourceParent && ui.sender || el.parentNode,
+                            sourceIndex: sourceIndex,
+                            targetParent: targetParent,
+                            targetIndex: targetIndex
+                        };
+                        sortable.hovering.call(this, arg, event, ui);
+                    },
                     receive: function(event, ui) {
                         dragItem = dataGet(ui.item[0], DRAGKEY);
                         if (dragItem) {
@@ -273,6 +298,7 @@
         allowDrop: true,
         afterMove: null,
         beforeMove: null,
+        hovering: null,
         options: {}
     };
 
