@@ -173,7 +173,7 @@
                                 targetIndex = updateIndexFromDestroyedItems(targetIndex, targetParent);
                             }
 
-                            if (sortable.beforeMove || sortable.afterMove) {
+                            if (sortable.beforeMove || sortable.afterMove || targetIndex >= 0) {
                                 arg = {
                                     item: item,
                                     sourceParent: sourceParent,
@@ -202,21 +202,12 @@
                             }
 
                             if (targetIndex >= 0) {
-                                if (sourceParent) {
-                                    sourceParent.splice(sourceIndex, 1);
-
-                                    //if using deferred updates plugin, force updates
-                                    if (ko.processAllDeferredBindingUpdates) {
-                                        ko.processAllDeferredBindingUpdates();
-                                    }
+                                updateItemLocation(arg);
+                                if (sourceParent !== targetParent) {
+                                    // if arrays are different rendering is processed by foreach
+                                    ui.item.remove();
                                 }
-
-                                targetParent.splice(targetIndex, 0, item);
                             }
-
-                            //rendering is handled by manipulating the observableArray; ignore dropped element
-                            dataSet(el, ITEMKEY, null);
-                            ui.item.remove();
 
                             //if using deferred updates plugin, force updates
                             if (ko.processAllDeferredBindingUpdates) {
@@ -323,4 +314,35 @@
         }
     };
 
+    function updateItemLocation(params) {
+        var sourceParentValue = unwrap(params.sourceParent);
+        var targetParentValue = unwrap(params.targetParent);
+        if (sourceParentValue) {
+            tryToCall(params.sourceParent, 'valueWillMutate');
+            sourceParentValue.splice(params.sourceIndex, 1);
+        }
+
+        if (sourceParentValue !== targetParentValue) {
+            tryToCall(params.targetParent, 'valueWillMutate');
+        }
+        targetParentValue.splice(params.targetIndex, 0, params.item);
+
+        if (targetParentValue === sourceParentValue) {
+            tryToCall(params.sourceParent, 'valueHasMutated');
+            //if using deferred updates plugin, force updates
+            if (ko.processAllDeferredBindingUpdates) {
+                ko.processAllDeferredBindingUpdates();
+            }
+        } else {
+            sourceParentValue && tryToCall(params.sourceParent, 'valueHasMutated');
+            tryToCall(params.targetParent, 'valueHasMutated');
+        }
+    }
+
+    function tryToCall(object, method) {
+        if (typeof object[method] === 'function') {
+            return object[method]();
+        }
+        return null;
+    }
 });
