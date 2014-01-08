@@ -87,9 +87,9 @@
                 startActual, updateActual;
 
             //remove leading/trailing non-elements from anonymous templates
-            ko.utils.arrayForEach(element.childNodes, function(node) {
-                if (node && node.nodeType !== 1) {
-                    node.parentNode.removeChild(node);
+            $element.contents().each(function() {
+                if (this && this.nodeType !== 1) {
+                    element.removeChild(this);
                 }
             });
 

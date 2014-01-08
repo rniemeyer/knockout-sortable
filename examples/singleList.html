@@ -74,6 +74,7 @@
     <div id="main">
         <h3>Tasks</h3>
         <div class="container" data-bind="sortable: tasks">
+            <!-- leading comment -->
             <div class="item">
                 <span data-bind="visible: !$root.isTaskSelected($data)">
                     <a href="#" data-bind="text: name, click: $root.selectedTask"></a>
@@ -82,6 +83,7 @@
                     <input data-bind="value: name, event: { blur: $root.clearTask }" />
                 </span>  
             </div>
+            <!-- trailing comment -->
         </div>
         <a href="#" data-bind="click: addTask">Add Task</a>
     </div>

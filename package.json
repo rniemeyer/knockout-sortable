@@ -1,6 +1,6 @@
 {
   "name": "knockout-sortable",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "0.x.x",
