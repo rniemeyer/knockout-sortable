@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Draggable, droppable, and sortable list (2.0)</title>
 
-    <script type='text/javascript' src='../ext/jquery-1.7.1.min.js'></script>
-    <script type="text/javascript" src="../ext/jquery-ui.min.js"></script>
+    <script type='text/javascript' src='../ext/jquery-1.9.1.js'></script>
+    <script type="text/javascript" src="../ext/jquery-ui.js"></script>
 
-    <script type='text/javascript' src="../ext/knockout-2.2.1.js"></script>
-    <script type='text/javascript' src="../build/knockout-sortable.min.js"></script>
+    <script type='text/javascript' src="../ext/knockout-3.0.0.js"></script>
+    <script type='text/javascript' src="../build/knockout-sortable.js"></script>
 
     <style type='text/css'>
         body {
@@ -73,7 +73,7 @@
 <body>
     <div id="main">
         <h3>Tasks</h3>
-        <div class="container" data-bind="sortable: tasks">
+        <div class="container" data-bind="sortable: { data: tasks }">
             <!-- leading comment -->
             <div class="item">
                 <span data-bind="visible: !$root.isTaskSelected($data)">
@@ -102,14 +102,7 @@
 
         var ViewModel = function() {
             var self = this;
-            self.tasks = ko.observableArray([
-                new Task("Get dog food"),
-                new Task("Mow lawn"),
-                new Task("Fix car"),
-                new Task("Fix fence"),
-                new Task("Walk dog"),
-                new Task("Read book")
-            ]);
+            self.tasks = ko.observableArray(null);
 
 
             self.selectedTask = ko.observable();
