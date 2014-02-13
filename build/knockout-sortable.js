@@ -1,4 +1,4 @@
-// knockout-sortable 0.8.5 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.8.6 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -251,7 +251,7 @@
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
                 //only call destroy if sortable has been created
-                if ($element.data("sortable")) {
+                if ($element.data("ui-sortable") || $element.data("sortable")) {
                     $element.sortable("destroy");
                 }
 

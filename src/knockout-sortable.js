@@ -250,7 +250,7 @@
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
                 //only call destroy if sortable has been created
-                if ($element.data("sortable")) {
+                if ($element.data("ui-sortable") || $element.data("sortable")) {
                     $element.sortable("destroy");
                 }
 
