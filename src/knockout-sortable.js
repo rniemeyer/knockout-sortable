@@ -29,7 +29,7 @@
     //prepare the proper options for the template binding
     var prepareTemplateOptions = function(valueAccessor, dataName) {
         var result = {},
-            options = unwrap(valueAccessor()),
+            options = unwrap(valueAccessor()) || {},
             actualAfterRender;
 
         //build our options to pass to the template engine
