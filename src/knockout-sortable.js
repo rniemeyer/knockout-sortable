@@ -203,20 +203,47 @@
 
                             if (targetIndex >= 0) {
                                 if (sourceParent) {
-                                    sourceParent.splice(sourceIndex, 1);
+                                    if (sourceParent !== targetParent) {
+                                        // moving from one list to another
 
-                                    //if using deferred updates plugin, force updates
-                                    if (ko.processAllDeferredBindingUpdates) {
-                                        ko.processAllDeferredBindingUpdates();
+                                        sourceParent.splice(sourceIndex, 1);
+
+                                        //if using deferred updates plugin, force updates
+                                        if (ko.processAllDeferredBindingUpdates) {
+                                            ko.processAllDeferredBindingUpdates();
+                                        }
+
+                                        targetParent.splice(targetIndex, 0, item);
+
+                                        //rendering is handled by manipulating the observableArray; ignore dropped element
+                                        dataSet(el, ITEMKEY, null);
+                                        ui.item.remove();
+                                    }
+                                    else {
+                                        // moving within same list
+                                        var underlyingList = unwrap(sourceParent);
+
+                                        // notify 'beforeChange' subscribers
+                                        sourceParent.valueWillMutate();
+
+										// move from source index ...
+                                        underlyingList.splice(sourceIndex, 1);
+										// ... to target index
+                                        underlyingList.splice(targetIndex, 0, item);
+
+                                        // notify subscribers
+                                        sourceParent.valueHasMutated();
                                     }
                                 }
+                                else {
+                                    // drop new element from outside
+                                    targetParent.splice(targetIndex, 0, item);
 
-                                targetParent.splice(targetIndex, 0, item);
+                                    //rendering is handled by manipulating the observableArray; ignore dropped element
+                                    dataSet(el, ITEMKEY, null);
+                                    ui.item.remove();
+                                }
                             }
-
-                            //rendering is handled by manipulating the observableArray; ignore dropped element
-                            dataSet(el, ITEMKEY, null);
-                            ui.item.remove();
 
                             //if using deferred updates plugin, force updates
                             if (ko.processAllDeferredBindingUpdates) {
