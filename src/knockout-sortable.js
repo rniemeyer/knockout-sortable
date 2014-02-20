@@ -226,13 +226,9 @@
                                         // notify 'beforeChange' subscribers
                                         sourceParent.valueWillMutate();
 
+										// move from source index ...
                                         underlyingList.splice(sourceIndex, 1);
-
-                                        //if using deferred updates plugin, force updates
-                                        if (ko.processAllDeferredBindingUpdates) {
-                                            ko.processAllDeferredBindingUpdates();
-                                        }
-
+										// ... to target index
                                         underlyingList.splice(targetIndex, 0, item);
 
                                         // notify subscribers
