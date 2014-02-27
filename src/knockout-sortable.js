@@ -14,7 +14,8 @@
         DRAGKEY = "ko_dragItem",
         unwrap = ko.utils.unwrapObservable,
         dataGet = ko.utils.domData.get,
-        dataSet = ko.utils.domData.set;
+        dataSet = ko.utils.domData.set,
+        preventAfterAdd = [];
 
     //internal afterRender that adds meta-data to children
     var addMetaDataAfterRender = function(elements, data) {
@@ -30,7 +31,7 @@
     var prepareTemplateOptions = function(valueAccessor, dataName) {
         var result = {},
             options = unwrap(valueAccessor()) || {},
-            actualAfterRender;
+            actualAfterRender, actualAfterAdd, itemIndex;
 
         //build our options to pass to the template engine
         if (options.data) {
@@ -55,6 +56,19 @@
                 };
             } else {
                 result.afterRender = addMetaDataAfterRender;
+            }
+
+            //prevent to be invoked afterAdd when sorted the item.
+            if (result.afterAdd) {
+                actualAfterAdd = result.afterAdd;
+                result.afterAdd = function(element, data) {
+                    itemIndex = preventAfterAdd.indexOf(dataGet(element, ITEMKEY));
+                    if (itemIndex > -1){
+                        preventAfterAdd.splice(itemIndex, 1);
+                    } else {
+                        actualAfterAdd(element, data);
+                    }
+                }
             }
         }
 
@@ -199,6 +213,10 @@
 
                                     return;
                                 }
+                            }
+
+                            if (preventAfterAdd.indexOf(item) < 0) {
+                                preventAfterAdd.push(item);
                             }
 
                             if (targetIndex >= 0) {
