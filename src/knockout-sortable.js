@@ -14,7 +14,7 @@
         DRAGKEY = "ko_dragItem",
         unwrap = ko.utils.unwrapObservable,
         dataGet = ko.utils.domData.get,
-        dataSet = ko.utils.domData.set;
+        dataSet = ko.utils.domData.set,
         preventAfterAdd = [];
 
     //internal afterRender that adds meta-data to children
