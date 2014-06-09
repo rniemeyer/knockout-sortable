@@ -321,8 +321,7 @@
 
     				if (item) {
     					sourceParent = ko.utils.domData.get(el, PARENTKEY);
-    					targetParent = droppable.data
-    					targetIndex;
+    					targetParent = droppable.data;
 
     					if (droppable.beforeMove || droppable.afterMove) {
     						arg = {
