@@ -190,7 +190,7 @@
                                 if (arg.cancelDrop) {
                                     //call cancel on the correct list
                                     if (arg.sourceParent) {
-                                        $(arg.sourceParent === arg.targetParent ? this : ui.sender).sortable('cancel');
+                                        $(arg.sourceParent === arg.targetParent ? this : ui.sender).sortable("cancel");
                                     }
                                     //for a draggable item just remove the element
                                     else {
@@ -204,6 +204,9 @@
                             if (targetIndex >= 0) {
                                 if (sourceParent) {
                                     sourceParent.splice(sourceIndex, 1);
+
+                                    //in KO 3+, nodes outside of the original parent aren't found when trying to dispose, need to do this manually
+                                    ko.removeNode(el);
 
                                     //if using deferred updates plugin, force updates
                                     if (ko.processAllDeferredBindingUpdates) {

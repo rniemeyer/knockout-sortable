@@ -1,4 +1,4 @@
-// knockout-sortable 0.8.6 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.8.7 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -191,7 +191,7 @@
                                 if (arg.cancelDrop) {
                                     //call cancel on the correct list
                                     if (arg.sourceParent) {
-                                        $(arg.sourceParent === arg.targetParent ? this : ui.sender).sortable('cancel');
+                                        $(arg.sourceParent === arg.targetParent ? this : ui.sender).sortable("cancel");
                                     }
                                     //for a draggable item just remove the element
                                     else {
@@ -205,6 +205,9 @@
                             if (targetIndex >= 0) {
                                 if (sourceParent) {
                                     sourceParent.splice(sourceIndex, 1);
+
+                                    //in KO 3+, nodes outside of the original parent aren't found when trying to dispose, need to do this manually
+                                    ko.removeNode(el);
 
                                     //if using deferred updates plugin, force updates
                                     if (ko.processAllDeferredBindingUpdates) {

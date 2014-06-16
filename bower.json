@@ -1,6 +1,6 @@
 {
     "name": "knockout-sortable",
-    "version": "0.8.6",
+    "version": "0.8.7",
     "main": "./build/knockout-sortable.min.js",
     "ignore": [
         "examples",
