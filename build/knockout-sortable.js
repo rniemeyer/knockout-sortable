@@ -1,4 +1,4 @@
-// knockout-sortable 0.8.7 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.8.8 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -174,6 +174,7 @@
                                 targetIndex = updateIndexFromDestroyedItems(targetIndex, targetParent);
                             }
 
+                            //build up args for the callbacks
                             if (sortable.beforeMove || sortable.afterMove) {
                                 arg = {
                                     item: item,
@@ -184,30 +185,31 @@
                                     targetIndex: targetIndex,
                                     cancelDrop: false
                                 };
-                            }
 
-                            if (sortable.beforeMove) {
-                                sortable.beforeMove.call(this, arg, event, ui);
-                                if (arg.cancelDrop) {
-                                    //call cancel on the correct list
-                                    if (arg.sourceParent) {
-                                        $(arg.sourceParent === arg.targetParent ? this : ui.sender).sortable("cancel");
-                                    }
-                                    //for a draggable item just remove the element
-                                    else {
-                                        $(el).remove();
-                                    }
-
-                                    return;
+                                //execute the configured callback prior to actually moving items
+                                if (sortable.beforeMove) {
+                                    sortable.beforeMove.call(this, arg, event, ui);
                                 }
                             }
 
+                            //call cancel on the correct list, so KO can take care of DOM manipulation
+                            if (sourceParent) {
+                                $(sourceParent === targetParent ? this : ui.sender).sortable("cancel");
+                            }
+                            //for a draggable item just remove the element
+                            else {
+                                $(el).remove();
+                            }
+
+                            //if beforeMove told us to cancel, then we are done
+                            if (arg && arg.cancelDrop) {
+                                return;
+                            }
+
+                            //do the actual move
                             if (targetIndex >= 0) {
                                 if (sourceParent) {
                                     sourceParent.splice(sourceIndex, 1);
-
-                                    //in KO 3+, nodes outside of the original parent aren't found when trying to dispose, need to do this manually
-                                    ko.removeNode(el);
 
                                     //if using deferred updates plugin, force updates
                                     if (ko.processAllDeferredBindingUpdates) {
@@ -220,7 +222,6 @@
 
                             //rendering is handled by manipulating the observableArray; ignore dropped element
                             dataSet(el, ITEMKEY, null);
-                            ui.item.remove();
 
                             //if using deferred updates plugin, force updates
                             if (ko.processAllDeferredBindingUpdates) {
