@@ -44,6 +44,9 @@
             result[option] = options[option] || ko.bindingHandlers.sortable[option];
         });
 
+		// apply an instance of the TemplateEngine to the options so it won't fail to render in knockout executeTemplate()
+		result.templateEngine = ko.nativeTemplateEngine.instance;
+
         //use an afterRender function to add meta-data
         if (dataName === "foreach") {
             if (result.afterRender) {
