@@ -159,7 +159,7 @@ describe("knockout-sortable", function(){
                     expect(children.eq(0).text()).toEqual("1");
                     expect(children.eq(1).text()).toEqual("2");
                     expect(children.eq(2).text()).toEqual("3");
-                })
+                });
             });
         });
 
@@ -414,7 +414,7 @@ describe("knockout-sortable", function(){
                     vm: { items: ko.observableArray([1, 2, 3]) }
                 };
             });
-            
+
             describe("when using an override class", function() {
                 beforeEach(function() {
                     ko.bindingHandlers.sortable.connectClass = "mycontainer";
@@ -429,35 +429,35 @@ describe("knockout-sortable", function(){
                     expect(options.root.hasClass('mycontainer')).toBeTruthy();
                 });
             });
-            
+
             describe("when setting the connectWith class to null", function() {
                 beforeEach(function() {
                     ko.bindingHandlers.sortable.connectClass = null;
                     setup(options);
                 });
-                
+
                 it("should not add a connectWith class to the root element", function() {
                     expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
                 });
-                
+
                 it("should set this element's sortable connectWith option to false", function() {
                     waits(0);
                     runs(function() {
                         expect(options.root.sortable("option", "connectWith")).toEqual(false);
-                    }); 
+                    });
                 });
             });
-            
+
             describe("when setting the connectWith class to false", function() {
                 beforeEach(function() {
                     ko.bindingHandlers.sortable.connectClass = false;
                     setup(options);
                 });
-                
+
                 it("should not add a connectWith class to the root element", function() {
                     expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
                 });
-                
+
                 it("should set this element's sortable connectWith option to false", function() {
                     waits(0);
                     runs(function() {
@@ -469,7 +469,7 @@ describe("knockout-sortable", function(){
 
         describe("when overriding connectClass in the binding options", function() {
             var options;
-            
+
             describe("when using an override class", function() {
                 beforeEach(function() {
                     options = {
@@ -479,7 +479,7 @@ describe("knockout-sortable", function(){
 
                     setup(options);
                 });
-                
+
                 it("should not add the default connectWith class 'ko_container' to the root element", function(){
                     expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
                 });
@@ -488,7 +488,7 @@ describe("knockout-sortable", function(){
                     expect(options.root.hasClass('mycontainer')).toBeTruthy();
                 });
             });
-            
+
             describe("when setting the connectWith class to null", function() {
                 beforeEach(function() {
                     options = {
@@ -498,11 +498,11 @@ describe("knockout-sortable", function(){
 
                     setup(options);
                 });
-                
+
                 it("should not add a connectWith class to the root element", function() {
                     expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
                 });
-                
+
                 it("should set this element's sortable connectWith option to false", function() {
                     waits(0);
                     runs(function() {
@@ -510,7 +510,7 @@ describe("knockout-sortable", function(){
                     });
                 });
             });
-            
+
             describe("when setting the connectWith class to false", function() {
                 beforeEach(function() {
                     options = {
@@ -520,11 +520,11 @@ describe("knockout-sortable", function(){
 
                     setup(options);
                 });
-                
+
                 it("should not add a connectWith class to the root element", function() {
                     expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
                 });
-                
+
                 it("should set this element's sortable connectWith option to false", function() {
                     waits(0);
                     runs(function() {
@@ -611,7 +611,7 @@ describe("knockout-sortable", function(){
                     waits(0);
                     runs(function() {
                         options.vm.isEnabled(true);
-                        expect(options.root.sortable("option", "disabled")).toBeFalsy();                    
+                        expect(options.root.sortable("option", "disabled")).toBeFalsy();
                     });
                 })
             });
@@ -708,33 +708,33 @@ describe("knockout-sortable", function(){
                 });
             });
         });
-        
+
         describe("when using a computed observable to return an observableArray", function() {
             var options;
-            
+
             beforeEach(function() {
                 options = {
                     elems: $("<ul data-bind='sortable: activeList()'><li data-bind='text: $data'></li></ul>"),
-                    vm: { 
+                    vm: {
                         itemsOne: ko.observableArray([1, 2, 3]),
                         itemsTwo: ko.observableArray(["a", "b", "c"]),
                         useTwo: ko.observable(false)
                     }
                 };
-                
+
                 options.vm.activeList = ko.computed(function() {
                     return this.useTwo() ? this.itemsTwo : this.itemsOne;
                 }, options.vm);
 
                 setup(options);
             });
-            
+
             it("should render the initial list", function() {
                 expect(options.root.children().first().text()).toEqual("1");
                 expect(options.root.children(":nth-child(2)").text()).toEqual("2");
                 expect(options.root.children(":nth-child(3)").text()).toEqual("3");
             });
-            
+
             describe("when updating the list that is returned by the computed observable", function() {
                 it("should render the new list", function() {
                     options.vm.useTwo(true);
