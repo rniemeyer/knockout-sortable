@@ -179,12 +179,11 @@ describe("knockout-sortable", function(){
                 expect(options.root.hasClass(defaults.connectClass)).toBeTruthy();
             });
 
-            it("should call .sortable on the root element", function() {
-                waits(0);
-                runs(function() {
+            it("should call .sortable on the root element", function(done) {
+                setTimeout(function() {
                     expect(options.root.data("sortable")).toBeDefined();
-                });
-                
+                    done();
+                }, 0);
             });
 
             it("should attach meta-data to the root element indicating the parent observableArray", function() {
@@ -215,7 +214,7 @@ describe("knockout-sortable", function(){
                 });
 
                 it("should call the global afterRender on each item", function() {
-                    expect(afterRenderSpy.callCount).toEqual(3);
+                    expect(afterRenderSpy.calls.count()).toEqual(3);
                 });
 
                 it("should attach meta-data to child elements indicating their item", function() {
@@ -241,7 +240,7 @@ describe("knockout-sortable", function(){
                 });
 
                 it("should call the global afterRender on each item", function() {
-                    expect(afterRenderSpy.callCount).toEqual(3);
+                    expect(afterRenderSpy.calls.count()).toEqual(3);
                 });
 
                 it("should attach meta-data to child elements indicating their item", function() {
@@ -268,7 +267,7 @@ describe("knockout-sortable", function(){
             });
 
             it("should call the local afterRender on each item rather than the global one", function() {
-                expect(options.vm.afterRenderSpy.callCount).toEqual(3);
+                expect(options.vm.afterRenderSpy.calls.count()).toEqual(3);
             });
 
             it("should attach meta-data to child elements indicating their item", function() {
