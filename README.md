@@ -15,12 +15,29 @@
 
 ```html
 <ul data-bind="sortable: { template: 'itemTmpl', data: items }"></ul>
-<script id="itemTmpl" type="text/html">
-  <li data-bind="text: name"></li>
-</script>
+<script id="itemTmpl" type="text/html"><li data-bind="text: name"></li></script>
 ```
 
 Note: The sortable binding assumes that the child "templates" have a single container element. You cannot use containerless bindings (comment-based) bindings at the top-level of your template, as the jQuery draggable/sortable functionality needs an element to operate on.
+
+Note2: When using named templates, you will have the best results across browsers, if you ensure that there is only a single top-level node inside your template with no surrounding text nodes. Inside of the top-level nodes, you can freely use whitespace/text nodes.  So, you will want:
+
+```html
+<!-- good - no text nodes surrounding template root node -->
+<script id="goodTmpl" type="text/html"><li data-bind="text: name">
+    <span data-bind="text: name"></span>
+</li></script>
+
+<!-- bad -->
+<script id="badTmpl" type="text/html">
+<li>
+  <span data-bind="text: name"></span>
+</li>
+</script>
+
+```
+
+
 
 **Additional Options**
 
@@ -73,9 +90,7 @@ This library also includes a `draggable` binding that you can place on single it
 
 ```html
 <div data-bind="draggable: { template: 'itemTmpl', data: item }"></div>
-<script id="itemTmpl" type="text/html">
-  <span data-bind="text: name"></span>
-</script>
+<script id="itemTmpl" type="text/html"><span data-bind="text: name"></span></script>
 ```
 
 **Additional Options**
