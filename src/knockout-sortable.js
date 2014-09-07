@@ -191,8 +191,14 @@
                                 }
                             }
 
-                            // just remove the element
-                            $(el).remove();
+                            //call cancel on the correct list, so KO can take care of DOM manipulation
+                            if (sourceParent) {
+                                $(sourceParent === targetParent ? this : ui.sender).sortable("cancel");
+                            }
+                            //for a draggable item just remove the element
+                            else {
+                                $(el).remove();
+                            }
 
                             //if beforeMove told us to cancel, then we are done
                             if (arg && arg.cancelDrop) {
