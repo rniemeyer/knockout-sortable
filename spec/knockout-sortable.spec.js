@@ -457,9 +457,10 @@ describe("knockout-sortable", function(){
                     expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
                 });
 
-                it("should set this element's sortable connectWith option to false", function() {
+                it("should set this element's sortable connectWith option to false", function(done) {
                     setTimeout(function() {
                         expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                        done();
                     }, 1);
                 });
             });
@@ -501,9 +502,10 @@ describe("knockout-sortable", function(){
                     expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
                 });
 
-                it("should set this element's sortable connectWith option to false", function() {
+                it("should set this element's sortable connectWith option to false", function(done) {
                     setTimeout(function() {
                         expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                        done();
                     }, 0);
                 });
             });
@@ -522,9 +524,10 @@ describe("knockout-sortable", function(){
                     expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
                 });
 
-                it("should set this element's sortable connectWith option to false", function() {
+                it("should set this element's sortable connectWith option to false", function(done) {
                     setTimeout(function() {
                         expect(options.root.sortable("option", "connectWith")).toEqual(false);
+                        done();
                     }, 0);
                 });
             });
@@ -570,9 +573,10 @@ describe("knockout-sortable", function(){
                     setup(options);
                 });
 
-                it("should be initially disabled", function() {
+                it("should be initially disabled", function(done) {
                     setTimeout(function() {
                         expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                        done();
                     }, 0);
                 });
             });
@@ -617,9 +621,10 @@ describe("knockout-sortable", function(){
                     setup(options);
                 });
 
-                it("should be initially disabled", function() {
+                it("should be initially disabled", function(done) {
                     setTimeout(function() {
                         expect(options.root.sortable("option", "disabled")).toBeTruthy();
+                        done();
                     }, 0);
                 });
             });
@@ -637,9 +642,10 @@ describe("knockout-sortable", function(){
                 setup(options);
             });
 
-            it("should pass the option on to .sortable properly", function() {
+            it("should pass the option on to .sortable properly", function(done) {
                 setTimeout(function() {
-                    expect(options.root.sortable("option", "axis")).toEqual('x');
+                    expect(options.root.sortable("option", "axis")).toEqual("x");
+                    done();
                 }, 0);
             });
         });
@@ -653,14 +659,15 @@ describe("knockout-sortable", function(){
                     vm: { items: ko.observableArray([1, 2, 3]) }
                 };
 
-                ko.bindingHandlers.sortable.options = { axis: 'x' };
+                ko.bindingHandlers.sortable.options = { axis: "x" };
 
                 setup(options);
             });
 
-            it("should pass the option on to .sortable properly", function() {
+            it("should pass the option on to .sortable properly", function(done) {
                 setTimeout(function() {
-                    expect(options.root.sortable("option", "axis")).toEqual('x');
+                    expect(options.root.sortable("option", "axis")).toEqual("x");
+                    done();
                 }, 0);
             });
         });
@@ -674,21 +681,21 @@ describe("knockout-sortable", function(){
                     vm: { items: ko.observableArray([1, 2, 3]) }
                 };
 
-                ko.bindingHandlers.sortable.options = { axis: 'x', delay: 100 };
+                ko.bindingHandlers.sortable.options = { axis: "x", delay: 100 };
 
                 setup(options);
             });
 
             it("should pass the local option rather than the global option to .sortable properly", function(done) {
                 setTimeout(function() {
-                    expect(options.root.sortable("option", "axis")).toEqual('y');
+                    expect(options.root.sortable("option", "axis")).toEqual("y");
                     done();
                 }, 0);
             });
 
             it("should pass the local option on to .sortable properly", function(done) {
                 setTimeout(function() {
-                    expect(options.root.sortable("option", "cursor")).toEqual('crosshair');
+                    expect(options.root.sortable("option", "cursor")).toEqual("crosshair");
                     done();
                 }, 0);
             });
@@ -750,6 +757,8 @@ describe("knockout-sortable", function(){
 
                //remove node prior to the setTimeout to initialize the sortable runs
                ko.removeNode(options.elems.first()[0]);
+
+               expect(1).toBeTruthy();
            });
         });
     });
