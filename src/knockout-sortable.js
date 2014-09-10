@@ -77,6 +77,29 @@
         return index;
     };
 
+    //remove problematic leading/trailing whitespace from templates
+    var stripTemplateWhitespace = function(element, name) {
+        var templateSource,
+            templateElement;
+
+        //process named templates
+        if (name) {
+            templateElement = document.getElementById(name);
+            if (templateElement) {
+                templateSource = new ko.templateSources.domElement(templateElement);
+                templateSource.text($.trim(templateSource.text()));
+            }
+        }
+        else {
+            //remove leading/trailing non-elements from anonymous templates
+            $(element).contents().each(function() {
+                if (this && this.nodeType !== 1) {
+                    element.removeChild(this);
+                }
+            });
+        }
+    };
+
     //connect items with observableArrays
     ko.bindingHandlers.sortable = {
         init: function(element, valueAccessor, allBindingsAccessor, data, context) {
@@ -86,12 +109,7 @@
                 sortable = {},
                 startActual, updateActual;
 
-            //remove leading/trailing non-elements from anonymous templates
-            $element.contents().each(function() {
-                if (this && this.nodeType !== 1) {
-                    element.removeChild(this);
-                }
-            });
+            stripTemplateWhitespace(element, templateOptions.name);
 
             //build a new object that has the global options with overrides from the binding
             $.extend(true, sortable, ko.bindingHandlers.sortable);

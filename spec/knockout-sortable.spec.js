@@ -140,6 +140,73 @@ describe("knockout-sortable", function(){
                 expect(children.eq(2).text()).toEqual("3");
             });
 
+            it("should strip leading and trailing whitespace characters from a template in a textarea", function() {
+                var children,
+                    options = {
+                        elems: $("<ul data-bind='sortable: { template: \"itemTmpl\", data: items }'></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
+
+                $("body").append("<textarea id='itemTmpl'>   \n   <li data-bind='text: $data'></li>     \n     </textarea>");
+
+                setup(options);
+
+                $("body").remove("#itemTmpl");
+
+                children = options.root.contents();
+
+                expect(children.length).toEqual(3);
+                expect(children.eq(0).text()).toEqual("1");
+                expect(children.eq(1).text()).toEqual("2");
+                expect(children.eq(2).text()).toEqual("3");
+            });
+
+            it("should strip leading and trailing whitespace characters from a template in an element", function() {
+                var children,
+                    options = {
+                        elems: $("<ul data-bind='sortable: { template: \"itemTmpl\", data: items }'></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
+
+                $("body").append("<div id='itemTmpl'>   \n   <li data-bind='text: $data'></li>     \n     </div>");
+
+                setup(options);
+
+                $("body").remove("#itemTmpl");
+
+                children = options.root.contents();
+
+                expect(children.length).toEqual(3);
+                expect(children.eq(0).text()).toEqual("1");
+                expect(children.eq(1).text()).toEqual("2");
+                expect(children.eq(2).text()).toEqual("3");
+            });
+
+            it("should strip leading and trailing whitespace characters from a template in a script", function() {
+                var children, script,
+                    options = {
+                        elems: $("<ul data-bind='sortable: { template: \"itemTmpl\", data: items }'></ul>"),
+                        vm: { items: ko.observableArray([1, 2, 3]) }
+                    };
+
+                script = document.createElement("script");
+                script.id = "itemTmpl";
+                script.type = "text/html";
+                script.text = "   \n   <li data-bind='text: $data'></li>     \n     ";
+                $("body").append(script);
+
+                setup(options);
+
+                $("body").remove("#itemTmpl");
+
+                children = options.root.contents();
+
+                expect(children.length).toEqual(3);
+                expect(children.eq(0).text()).toEqual("1");
+                expect(children.eq(1).text()).toEqual("2");
+                expect(children.eq(2).text()).toEqual("3");
+            });
+
             describe("when using 'as' to name the context", function() {
                 it("should allow referring to child items by 'as' name", function() {
                     var children,
