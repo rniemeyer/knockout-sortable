@@ -20,7 +20,7 @@
 
 Note: The sortable binding assumes that the child "templates" have a single container element. You cannot use containerless bindings (comment-based) bindings at the top-level of your template, as the jQuery draggable/sortable functionality needs an element to operate on.
 
-Note2: When using named templates, you will have the best results across browsers, if you ensure that there is only a single top-level node inside your template with no surrounding text nodes. Inside of the top-level nodes, you can freely use whitespace/text nodes.  So, you will want:
+Note2: (*Update: 0.9.0 adds code to automatically strip leading/trailing whitespace*) When using named templates, you will have the best results across browsers, if you ensure that there is only a single top-level node inside your template with no surrounding text nodes. Inside of the top-level nodes, you can freely use whitespace/text nodes.  So, you will want:
 
 ```html
 <!-- good - no text nodes surrounding template root node -->
@@ -36,6 +36,8 @@ Note2: When using named templates, you will have the best results across browser
 </script>
 
 ```
+
+
 
 
 
