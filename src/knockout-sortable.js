@@ -308,7 +308,7 @@
                 connectClass = value.connectClass || ko.bindingHandlers.draggable.connectClass,
                 isEnabled = value.isEnabled !== undefined ? value.isEnabled : ko.bindingHandlers.draggable.isEnabled;
 
-            value = value.data || value;
+            value = "data" in value ? value.data : value;
 
             //set meta-data
             dataSet(element, DRAGKEY, value);
