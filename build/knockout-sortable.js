@@ -1,4 +1,4 @@
-// knockout-sortable 0.9.0 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.9.1 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -309,7 +309,7 @@
                 connectClass = value.connectClass || ko.bindingHandlers.draggable.connectClass,
                 isEnabled = value.isEnabled !== undefined ? value.isEnabled : ko.bindingHandlers.draggable.isEnabled;
 
-            value = value.data || value;
+            value = "data" in value ? value.data : value;
 
             //set meta-data
             dataSet(element, DRAGKEY, value);
