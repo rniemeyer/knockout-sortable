@@ -15,7 +15,10 @@
         DRAGKEY = "ko_dragItem",
         unwrap = ko.utils.unwrapObservable,
         dataGet = ko.utils.domData.get,
-        dataSet = ko.utils.domData.set;
+        dataSet = ko.utils.domData.set,
+        version = $.ui && $.ui.version,
+        //1.8.24 included a fix for how events were triggered in nested sortables. indexOf checks will fail if version starts with that value (0 vs. -1)
+        hasNestedSortableFix = version && version.indexOf("1.6.") && version.indexOf("1.7.") && (version.indexOf("1.8.") || version === "1.8.24");
 
     //internal afterRender that adds meta-data to children
     var addMetaDataAfterRender = function(elements, data) {
@@ -179,7 +182,7 @@
                         dragItem = null;
 
                         //make sure that moves only run once, as update fires on multiple containers
-                        if (item && (this === parentEl || $.contains(this, parentEl))) {
+                        if (item && (this === parentEl) || (!hasNestedSortableFix && $.contains(this, parentEl))) {
                             //identify parents
                             sourceParent = dataGet(el, PARENTKEY);
                             sourceIndex = dataGet(el, INDEXKEY);
