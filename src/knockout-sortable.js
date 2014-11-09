@@ -2,6 +2,12 @@
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
         define(["knockout", "jquery", "jquery.ui.sortable"], factory);
+    } else if (typeof module === "object") {
+        // CommonJS module
+        var ko = require("knockout");
+        var jQuery = require("jquery");
+        require("jquery.ui.sortable");
+        factory(ko, jQuery);
     } else {
         // No module loader (plain <script> tag) - put directly in global namespace
         factory(window.ko, jQuery);
