@@ -2,15 +2,15 @@
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
         define(["knockout", "jquery", "jquery.ui.sortable"], factory);
-    } else if (typeof module === "object") {
+    } else if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
         // CommonJS module
-        var ko = require("knockout");
-        var jQuery = require("jquery");
+        var ko = require("knockout"),
+            jQuery = require("jquery");
         require("jquery.ui.sortable");
         factory(ko, jQuery);
     } else {
         // No module loader (plain <script> tag) - put directly in global namespace
-        factory(window.ko, jQuery);
+        factory(window.ko, window.jQuery);
     }
 })(function(ko, $) {
     var ITEMKEY = "ko_sortItem",
