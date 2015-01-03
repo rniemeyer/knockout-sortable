@@ -1,4 +1,4 @@
-// knockout-sortable 0.9.3 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.9.3 | (c) 2015 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -186,6 +186,10 @@
                             item = dataGet(el, ITEMKEY) || dragItem;
 
                         dragItem = null;
+
+                        if (sortable.dragged) {
+                            item = sortable.dragged.call(this, item, event, ui) || item;
+                        }
 
                         //make sure that moves only run once, as update fires on multiple containers
                         if (item && (this === parentEl) || (!hasNestedSortableFix && $.contains(this, parentEl))) {
