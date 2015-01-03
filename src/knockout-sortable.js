@@ -186,6 +186,10 @@
 
                         dragItem = null;
 
+                        if (sortable.dragged) {
+                            item = sortable.dragged.call(this, item, event, ui) || item;
+                        }
+
                         //make sure that moves only run once, as update fires on multiple containers
                         if (item && (this === parentEl) || (!hasNestedSortableFix && $.contains(this, parentEl))) {
                             //identify parents
