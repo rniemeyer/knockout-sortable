@@ -24,19 +24,7 @@ describe("knockout-sortable", function(){
         return templateEngine;
     };
 
-    var defaults = {
-        connectClass: ko.bindingHandlers.sortable.connectClass,
-        allowDrop: ko.bindingHandlers.sortable.allowDrop,
-        beforeMove: ko.bindingHandlers.sortable.beforeMove,
-        afterMove: ko.bindingHandlers.sortable.afterMove,
-        afterRender: ko.bindingHandlers.sortable.afterRender,
-        templateEngine: undefined,
-        templateOptions: undefined,
-        afterAdd: undefined,
-        beforeRemove: undefined,
-        includeDestroyed: undefined,
-        nodes: undefined
-    };
+    var defaults = ko.utils.extend({}, ko.bindingHandlers.sortable);
 
     var setup = function(options) {
         ko.setTemplateEngine(options.engine || new ko.nativeTemplateEngine());
@@ -48,8 +36,8 @@ describe("knockout-sortable", function(){
 
     describe("sortable binding", function() {
         beforeEach(function() {
-            //restore defaults
-            ko.utils.extend(ko.bindingHandlers.sortable, defaults);
+            defaults.options = {};
+            ko.bindingHandlers.sortable = ko.utils.extend({}, defaults);
         });
 
         describe("when using an anonymous template", function(){

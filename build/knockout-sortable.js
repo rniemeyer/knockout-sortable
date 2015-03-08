@@ -1,13 +1,13 @@
-// knockout-sortable 0.9.3 | (c) 2014 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.9.3 | (c) 2015 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
-        define(["knockout", "jquery", "jquery.ui.sortable"], factory);
+        define(["knockout", "jquery", "jquery.ui/sortable"], factory);
     } else if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
         // CommonJS module
         var ko = require("knockout"),
             jQuery = require("jquery");
-        require("jquery.ui.sortable");
+        require("jquery.ui/sortable");
         factory(ko, jQuery);
     } else {
         // No module loader (plain <script> tag) - put directly in global namespace
@@ -50,8 +50,12 @@
             result[dataName] = valueAccessor();
         }
 
-        ko.utils.arrayForEach(["afterAdd", "afterRender", "as", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions"], function (option) {
-            result[option] = options[option] || ko.bindingHandlers.sortable[option];
+        ko.utils.arrayForEach(["afterAdd", "afterRender", "as", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions", "nodes"], function (option) {
+            if (options.hasOwnProperty(option)) {
+                result[option] = options[option];
+            } else if (ko.bindingHandlers.sortable.hasOwnProperty(option)) {
+                result[option] = ko.bindingHandlers.sortable[option];
+            }
         });
 
         //use an afterRender function to add meta-data
@@ -286,6 +290,8 @@
                     $element.sortable("destroy");
                 }
 
+                ko.utils.toggleDomNodeCssClass(element, sortable.connectClass, false);
+
                 //do not create the sortable if the element has been removed from DOM
                 clearTimeout(createTimeout);
             });
@@ -342,6 +348,11 @@
                 });
             }
 
+            //handle disposal
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                $(element).draggable("destroy");
+            });
+
             return ko.bindingHandlers.template.init(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
         },
         update: function(element, valueAccessor, allBindingsAccessor, data, context) {
@@ -354,5 +365,4 @@
             helper: "clone"
         }
     };
-
 });
