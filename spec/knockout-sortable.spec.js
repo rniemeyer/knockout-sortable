@@ -249,6 +249,7 @@ describe("knockout-sortable", function(){
             it("should call .sortable on the root element", function(done) {
                 setTimeout(function() {
                     expect(options.root.data("sortable")).toBeDefined();
+                    expect(options.root.hasClass("ui-sortable")).toBeTruthy();
                     done();
                 }, 0);
             });
@@ -264,6 +265,17 @@ describe("knockout-sortable", function(){
             it("should attach meta-data to child elements indicating their parent observableArray", function() {
                 expect(ko.utils.domData.get(options.root.children()[0], "ko_parentList")).toEqual(options.vm.items);
             });
+
+            it("should destroy .sortable on node removal", function(done) {
+                setTimeout(function() {
+                    ko.removeNode(options.root[0]);
+                    expect(options.root.hasClass("ui-sortable")).toBeFalsy();
+                    expect(options.root.data("sortable")).toBeUndefined();
+                    expect(options.root.hasClass(defaults.connectClass)).toBeFalsy();
+                    done();
+                }, 0);
+            });
+
         });
 
         describe("when setting afterRender globally", function() {
@@ -828,6 +840,7 @@ describe("knockout-sortable", function(){
                expect(1).toBeTruthy();
            });
         });
+
     });
 
     describe("draggable binding", function() {
@@ -893,6 +906,11 @@ describe("knockout-sortable", function(){
 
             it("should use the default connectClass", function() {
                 expect(options.root.draggable("option", "connectToSortable")).toEqual("." + defaults.connectClass);
+            });
+
+            it("should be disposed on node", function() {
+                ko.removeNode(options.root[0]);
+                expect(options.root.hasClass("ui-draggable")).toBeFalsy();
             });
         });
 

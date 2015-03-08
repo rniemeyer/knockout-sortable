@@ -285,6 +285,8 @@
                     $element.sortable("destroy");
                 }
 
+                ko.utils.toggleDomNodeCssClass(element, sortable.connectClass, false);
+
                 //do not create the sortable if the element has been removed from DOM
                 clearTimeout(createTimeout);
             });
@@ -340,6 +342,11 @@
                     disposeWhenNodeIsRemoved: element
                 });
             }
+
+            //handle disposal
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                $(element).draggable("destroy");
+            });
 
             return ko.bindingHandlers.template.init(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
         },
