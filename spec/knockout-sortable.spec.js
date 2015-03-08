@@ -29,7 +29,13 @@ describe("knockout-sortable", function(){
         allowDrop: ko.bindingHandlers.sortable.allowDrop,
         beforeMove: ko.bindingHandlers.sortable.beforeMove,
         afterMove: ko.bindingHandlers.sortable.afterMove,
-        afterRender: ko.bindingHandlers.sortable.afterRender
+        afterRender: ko.bindingHandlers.sortable.afterRender,
+        templateEngine: undefined,
+        templateOptions: undefined,
+        afterAdd: undefined,
+        beforeRemove: undefined,
+        includeDestroyed: undefined,
+        nodes: undefined
     };
 
     var setup = function(options) {
@@ -280,7 +286,8 @@ describe("knockout-sortable", function(){
 
         describe("when setting afterRender globally", function() {
             describe("when passing just data", function() {
-                var afterRenderSpy;
+                var afterRenderSpy, options;
+
                 beforeEach(function() {
                     options = {
                         elems: $("<ul data-bind='sortable: items'><li data-bind='text: $data'></li></ul>"),
@@ -306,7 +313,8 @@ describe("knockout-sortable", function(){
             });
 
             describe("when passing options", function() {
-                var afterRenderSpy;
+                var afterRenderSpy, options;
+
                 beforeEach(function() {
                     options = {
                         elems: $("<ul data-bind='sortable: { data: items }'><li data-bind='text: $data'></li></ul>"),
@@ -328,6 +336,60 @@ describe("knockout-sortable", function(){
 
                 it("should attach meta-data to child elements indicating their parent observableArray", function() {
                     expect(ko.utils.domData.get(options.root.children()[0], "ko_parentList")).toEqual(options.vm.items);
+                });
+            });
+        });
+
+        describe("passing on template options to the template binding", function() {
+            var originalTemplateBinding, options, testValue;
+
+            function testValuePassed(option) {
+                var initOptions = ko.bindingHandlers.template.init.calls.mostRecent().args[1]();
+                var updateOptions = ko.bindingHandlers.template.update.calls.mostRecent().args[1]();
+
+                expect(initOptions[option]).toEqual(testValue);
+                expect(updateOptions[option]).toEqual(testValue);
+            }
+
+            beforeEach(function() {
+                originalTemplateBinding = ko.bindingHandlers.template;
+
+                ko.bindingHandlers.template = {
+                    init: jasmine.createSpy(),
+                    update: jasmine.createSpy()
+                };
+
+                options = {
+                    elems: $("<ul data-bind='sortable: sortableOptions'><li data-bind='text: $data'></li></ul>"),
+                    vm: {
+                        sortableOptions: {
+                            data: ko.observableArray([1, 2, 3])
+                        }
+                    }
+                };
+
+                testValue = {};
+            });
+
+            afterEach(function() {
+                ko.bindingHandlers.template = originalTemplateBinding;
+            });
+
+            ko.utils.arrayForEach(["afterAdd", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions", "nodes"], function(option) {
+                it("should pass on the " + option + " template option, when supplied locally", function() {
+                    options.vm.sortableOptions[option] = testValue;
+
+                    setup(options);
+
+                    testValuePassed(option);
+                });
+
+                it("should pass on the " + option + " template option, when supplied globally", function() {
+                    ko.bindingHandlers.sortable[option] = testValue;
+
+                    setup(options);
+
+                    testValuePassed(option);
                 });
             });
         });

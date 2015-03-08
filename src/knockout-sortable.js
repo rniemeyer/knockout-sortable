@@ -49,8 +49,12 @@
             result[dataName] = valueAccessor();
         }
 
-        ko.utils.arrayForEach(["afterAdd", "afterRender", "as", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions"], function (option) {
-            result[option] = options[option] || ko.bindingHandlers.sortable[option];
+        ko.utils.arrayForEach(["afterAdd", "afterRender", "as", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions", "nodes"], function (option) {
+            if (options.hasOwnProperty(option)) {
+                result[option] = options[option];
+            } else if (ko.bindingHandlers.sortable.hasOwnProperty(option)) {
+                result[option] = ko.bindingHandlers.sortable[option];
+            }
         });
 
         //use an afterRender function to add meta-data
