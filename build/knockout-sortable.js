@@ -1,4 +1,4 @@
-// knockout-sortable 0.9.3 | (c) 2015 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.10.0 | (c) 2015 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
