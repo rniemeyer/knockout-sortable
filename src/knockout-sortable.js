@@ -1,12 +1,12 @@
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
-        define(["knockout", "jquery", "jquery.ui.sortable"], factory);
+        define(["knockout", "jquery", "jquery.ui/sortable"], factory);
     } else if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
         // CommonJS module
         var ko = require("knockout"),
             jQuery = require("jquery");
-        require("jquery.ui.sortable");
+        require("jquery.ui/sortable");
         factory(ko, jQuery);
     } else {
         // No module loader (plain <script> tag) - put directly in global namespace
@@ -360,5 +360,4 @@
             helper: "clone"
         }
     };
-
 });
