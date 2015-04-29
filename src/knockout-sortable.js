@@ -6,7 +6,7 @@
         // CommonJS module
         var ko = require("knockout"),
             jQuery = require("jquery");
-        require("jquery.ui/sortable");
+        require("jquery-ui/sortable");
         factory(ko, jQuery);
     } else {
         // No module loader (plain <script> tag) - put directly in global namespace
