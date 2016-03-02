@@ -153,6 +153,16 @@
             //keep a reference to start/update functions that might have been passed in
             startActual = sortable.options.start;
             updateActual = sortable.options.update;
+            
+            //ensure traggable table rows' cells maintain their width while dragging
+            sortable.options.helper = function(e, ui) {
+                if (ui.is('tr')) {
+                    ui.children().each(function() {
+                        $(this).width($(this).width());
+                    });
+                }
+                return ui;
+            };
 
             //initialize sortable binding after template binding has rendered in update function
             var createTimeout = setTimeout(function() {
