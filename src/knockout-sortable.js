@@ -154,9 +154,9 @@
             startActual = sortable.options.start;
             updateActual = sortable.options.update;
             
-            //ensure traggable table rows' cells maintain their width while dragging
+            //ensure draggable table row cells maintain their width while dragging
             sortable.options.helper = function(e, ui) {
-                if (ui.is('tr')) {
+                if (ui.is("tr")) {
                     ui.children().each(function() {
                         $(this).width($(this).width());
                     });
