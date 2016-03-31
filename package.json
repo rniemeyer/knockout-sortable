@@ -1,9 +1,10 @@
 {
   "name": "knockout-sortable",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "author": "Ryan Niemeyer",
   "homepage": "https://github.com/rniemeyer/knockout-sortable",
   "description": "A Knockout.js binding to connect observableArrays with jQuery UI sortable functionality",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/rniemeyer/knockout-sortable.git"
