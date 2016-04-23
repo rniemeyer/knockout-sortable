@@ -72,6 +72,8 @@ Note2: (*Update: 0.9.0 adds code to automatically strip leading/trailing whitesp
 
 * **isEnabled** - specify whether the sortable widget should be enabled.  If this is an observable, then it will enable/disable the widget when the observable's value changes.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.isEnabled`.
 
+* **strategyMove** - specify whether dropping an item within the same list should move the same item to the new index rather than removing and re-adding the item in the new location (which is the default and causes the item to be re-rendered).  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.strategyMove`. The default value is `false`.
+
 * **options** - specify any additional options to pass on to the `.sortable` jQuery UI call.  These options can be specified in the binding or specified globally by setting `ko.bindingHandlers.sortable.options`.
 
 * **afterAdd, beforeRemove, afterRender, includeDestroyed, templateEngine, as** - this binding will pass these options on to the template binding.

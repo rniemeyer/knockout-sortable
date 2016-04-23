@@ -246,73 +246,73 @@
                             if (arg && arg.cancelDrop) {
                                 return;
                             }
-							
-							//if the strategy option is unset or false, employ the order strategy involving removal and insertion of items
-							if(!sortable.hasOwnProperty("strategyMove") || sortable.strategyMove === false)
-							{
-								//do the actual move
-								if (targetIndex >= 0) {
-									if (sourceParent) {
-										sourceParent.splice(sourceIndex, 1);
 
-										//if using deferred updates plugin, force updates
-										if (ko.processAllDeferredBindingUpdates) {
-											ko.processAllDeferredBindingUpdates();
-										}
-									}
+                            //if the strategy option is unset or false, employ the order strategy involving removal and insertion of items
+                            if (!sortable.hasOwnProperty("strategyMove") || sortable.strategyMove === false) {
+                                //do the actual move
+                                if (targetIndex >= 0) {
+                                    if (sourceParent) {
+                                        sourceParent.splice(sourceIndex, 1);
 
-									targetParent.splice(targetIndex, 0, item);
-								}
+                                        //if using deferred updates plugin, force updates
+                                        if (ko.processAllDeferredBindingUpdates) {
+                                            ko.processAllDeferredBindingUpdates();
+                                        }
+                                    }
 
-								//rendering is handled by manipulating the observableArray; ignore dropped element
-								dataSet(el, ITEMKEY, null);
-							}
-							else { //employ the strategy of moving items
-								if (targetIndex >= 0) {
-									if (sourceParent) {
-										if (sourceParent !== targetParent) {
-											// moving from one list to another
+                                    targetParent.splice(targetIndex, 0, item);
+                                }
 
-											sourceParent.splice(sourceIndex, 1);
+                                //rendering is handled by manipulating the observableArray; ignore dropped element
+                                dataSet(el, ITEMKEY, null);
+                            }
+                            else { //employ the strategy of moving items
+                                console.log( "strategy move" );
+                                if (targetIndex >= 0) {
+                                    if (sourceParent) {
+                                        if (sourceParent !== targetParent) {
+                                            // moving from one list to another
 
-											//if using deferred updates plugin, force updates
-											if (ko.processAllDeferredBindingUpdates) {
-												ko.processAllDeferredBindingUpdates();
-											}
+                                            sourceParent.splice(sourceIndex, 1);
 
-											targetParent.splice(targetIndex, 0, item);
+                                            //if using deferred updates plugin, force updates
+                                            if (ko.processAllDeferredBindingUpdates) {
+                                                ko.processAllDeferredBindingUpdates();
+                                            }
 
-											//rendering is handled by manipulating the observableArray; ignore dropped element
-											dataSet(el, ITEMKEY, null);
-											ui.item.remove();
-										}
-										else {
-											// moving within same list
-											var underlyingList = unwrap(sourceParent);
+                                            targetParent.splice(targetIndex, 0, item);
 
-											// notify 'beforeChange' subscribers
-											sourceParent.valueWillMutate();
+                                            //rendering is handled by manipulating the observableArray; ignore dropped element
+                                            dataSet(el, ITEMKEY, null);
+                                            ui.item.remove();
+                                        }
+                                        else {
+                                            // moving within same list
+                                            var underlyingList = unwrap(sourceParent);
 
-											// move from source index ...
-											underlyingList.splice(sourceIndex, 1);
-											// ... to target index
-											underlyingList.splice(targetIndex, 0, item);
+                                            // notify 'beforeChange' subscribers
+                                            sourceParent.valueWillMutate();
 
-											// notify subscribers
-											sourceParent.valueHasMutated();
-										}
-									}
-									else {
-										// drop new element from outside
-										targetParent.splice(targetIndex, 0, item);
+                                            // move from source index ...
+                                            underlyingList.splice(sourceIndex, 1);
+                                            // ... to target index
+                                            underlyingList.splice(targetIndex, 0, item);
 
-										//rendering is handled by manipulating the observableArray; ignore dropped element
-										dataSet(el, ITEMKEY, null);
-										ui.item.remove();
-									}
-								}
-							}
-							
+                                            // notify subscribers
+                                            sourceParent.valueHasMutated();
+                                        }
+                                    }
+                                    else {
+                                        // drop new element from outside
+                                        targetParent.splice(targetIndex, 0, item);
+
+                                        //rendering is handled by manipulating the observableArray; ignore dropped element
+                                        dataSet(el, ITEMKEY, null);
+                                        ui.item.remove();
+                                    }
+                                }
+                            }
+
                             //if using deferred updates plugin, force updates
                             if (ko.processAllDeferredBindingUpdates) {
                                 ko.processAllDeferredBindingUpdates();
