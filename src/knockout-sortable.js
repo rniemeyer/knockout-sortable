@@ -153,7 +153,7 @@
             //keep a reference to start/update functions that might have been passed in
             startActual = sortable.options.start;
             updateActual = sortable.options.update;
-            
+
             //ensure draggable table row cells maintain their width while dragging
             sortable.options.helper = function(e, ui) {
                 if (ui.is("tr")) {
@@ -267,7 +267,6 @@
                                 dataSet(el, ITEMKEY, null);
                             }
                             else { //employ the strategy of moving items
-                                console.log( "strategy move" );
                                 if (targetIndex >= 0) {
                                     if (sourceParent) {
                                         if (sourceParent !== targetParent) {

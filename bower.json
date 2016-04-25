@@ -6,7 +6,7 @@
 		{ "name": "Ryan Niemeyer" }
 	],
 	"license": "MIT",
-    "version": "0.13.0",
+    "version": "0.13.1",
     "main": "./build/knockout-sortable.min.js",
     "ignore": [
         "examples",
