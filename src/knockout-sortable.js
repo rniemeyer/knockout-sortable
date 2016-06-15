@@ -180,6 +180,8 @@
                         }
                     },
                     receive: function(event, ui) {
+                    	if (sortable.accept && !sortable.accept(event, ui))
+                    		return;
                         dragItem = dataGet(ui.item[0], DRAGKEY);
                         if (dragItem) {
                             //copy the model item, if a clone option is provided
@@ -192,6 +194,7 @@
                                 dragItem = sortable.dragged.call(this, dragItem, event, ui) || dragItem;
                             }
                         }
+                    	else $element.sortable('cancel'); // should work but doesn't: https://bugs.jqueryui.com/ticket/14734
                     },
                     update: function(event, ui) {
                         var sourceParent, targetParent, sourceIndex, targetIndex, arg,
@@ -199,6 +202,9 @@
                             parentEl = ui.item.parent()[0],
                             item = dataGet(el, ITEMKEY) || dragItem;
 
+                        if (!item) {
+                        	$(el).remove(); // workaround for https://bugs.jqueryui.com/ticket/14734
+                        }
                         dragItem = null;
 
                         //make sure that moves only run once, as update fires on multiple containers
