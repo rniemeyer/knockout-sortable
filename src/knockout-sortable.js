@@ -290,7 +290,7 @@
                                             var underlyingList = unwrap(sourceParent);
 
                                             // notify 'beforeChange' subscribers
-                                            sourceParent.valueWillMutate();
+                                            sourceParent.valueWillMutate && sourceParent.valueWillMutate();
 
                                             // move from source index ...
                                             underlyingList.splice(sourceIndex, 1);
@@ -298,7 +298,7 @@
                                             underlyingList.splice(targetIndex, 0, item);
 
                                             // notify subscribers
-                                            sourceParent.valueHasMutated();
+                                            sourceParent.valueHasMutated && sourceParent.valueHasMutated();
                                         }
                                     }
                                     else {
