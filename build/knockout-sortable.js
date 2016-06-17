@@ -1,4 +1,4 @@
-// knockout-sortable 0.13.1 | (c) 2016 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.14.0 | (c) 2016 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -168,6 +168,8 @@
             //initialize sortable binding after template binding has rendered in update function
             var createTimeout = setTimeout(function() {
                 var dragItem;
+                var originalReceive = sortable.options.receive;
+
                 $element.sortable(ko.utils.extend(sortable.options, {
                     start: function(event, ui) {
                         //track original index
@@ -181,6 +183,11 @@
                         }
                     },
                     receive: function(event, ui) {
+                        //optionally apply an existing receive handler
+                        if (typeof originalReceive === "function") {
+                            originalReceive.call(this, event, ui);
+                        }
+
                         dragItem = dataGet(ui.item[0], DRAGKEY);
                         if (dragItem) {
                             //copy the model item, if a clone option is provided
@@ -200,6 +207,9 @@
                             parentEl = ui.item.parent()[0],
                             item = dataGet(el, ITEMKEY) || dragItem;
 
+                        if (!item) {
+                            $(el).remove();
+                        }
                         dragItem = null;
 
                         //make sure that moves only run once, as update fires on multiple containers
@@ -259,6 +269,11 @@
                                         if (ko.processAllDeferredBindingUpdates) {
                                             ko.processAllDeferredBindingUpdates();
                                         }
+
+                                        //if using deferred updates on knockout 3.4, force updates
+                                        if (ko.options.deferUpdates) {
+                                            ko.tasks.runEarly();
+                                        }
                                     }
 
                                     targetParent.splice(targetIndex, 0, item);
@@ -274,12 +289,6 @@
                                             // moving from one list to another
 
                                             sourceParent.splice(sourceIndex, 1);
-
-                                            //if using deferred updates plugin, force updates
-                                            if (ko.processAllDeferredBindingUpdates) {
-                                                ko.processAllDeferredBindingUpdates();
-                                            }
-
                                             targetParent.splice(targetIndex, 0, item);
 
                                             //rendering is handled by manipulating the observableArray; ignore dropped element
@@ -291,7 +300,9 @@
                                             var underlyingList = unwrap(sourceParent);
 
                                             // notify 'beforeChange' subscribers
-                                            sourceParent.valueWillMutate();
+                                            if (sourceParent.valueWillMutate) {
+                                                sourceParent.valueWillMutate();
+                                            }
 
                                             // move from source index ...
                                             underlyingList.splice(sourceIndex, 1);
@@ -299,7 +310,9 @@
                                             underlyingList.splice(targetIndex, 0, item);
 
                                             // notify subscribers
-                                            sourceParent.valueHasMutated();
+                                            if (sourceParent.valueHasMutated) {
+                                                sourceParent.valueHasMutated();
+                                            }
                                         }
                                     }
                                     else {

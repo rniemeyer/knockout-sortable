@@ -167,7 +167,7 @@
             //initialize sortable binding after template binding has rendered in update function
             var createTimeout = setTimeout(function() {
                 var dragItem;
-				var originalReceive = sortable.options.receive;
+                var originalReceive = sortable.options.receive;
 
                 $element.sortable(ko.utils.extend(sortable.options, {
                     start: function(event, ui) {
@@ -182,10 +182,10 @@
                         }
                     },
                     receive: function(event, ui) {
-						//optionally apply an existing receive handler
-                    	if (typeof originalReceive === "function") {
-							originalReceive.call(this, event, ui);
-						}
+                        //optionally apply an existing receive handler
+                        if (typeof originalReceive === "function") {
+                            originalReceive.call(this, event, ui);
+                        }
 
                         dragItem = dataGet(ui.item[0], DRAGKEY);
                         if (dragItem) {
@@ -207,7 +207,7 @@
                             item = dataGet(el, ITEMKEY) || dragItem;
 
                         if (!item) {
-                        	$(el).remove();
+                            $(el).remove();
                         }
                         dragItem = null;
 
@@ -268,9 +268,9 @@
                                         if (ko.processAllDeferredBindingUpdates) {
                                             ko.processAllDeferredBindingUpdates();
                                         }
-                                        
+
                                         //if using deferred updates on knockout 3.4, force updates
-                                        if(ko.options.deferUpdates) {
+                                        if (ko.options.deferUpdates) {
                                             ko.tasks.runEarly();
                                         }
                                     }
@@ -288,17 +288,6 @@
                                             // moving from one list to another
 
                                             sourceParent.splice(sourceIndex, 1);
-
-                                            //if using deferred updates plugin, force updates
-                                            if (ko.processAllDeferredBindingUpdates) {
-                                                ko.processAllDeferredBindingUpdates();
-                                            }
-                                            
-                                            //if using deferred updates on knockout 3.4, force updates
-                                            if(ko.options.deferUpdates) {
-                                                ko.tasks.runEarly();
-                                            }
-
                                             targetParent.splice(targetIndex, 0, item);
 
                                             //rendering is handled by manipulating the observableArray; ignore dropped element
@@ -311,8 +300,8 @@
 
                                             // notify 'beforeChange' subscribers
                                             if (sourceParent.valueWillMutate) {
-												sourceParent.valueWillMutate();
-											}
+                                                sourceParent.valueWillMutate();
+                                            }
 
                                             // move from source index ...
                                             underlyingList.splice(sourceIndex, 1);
@@ -320,9 +309,9 @@
                                             underlyingList.splice(targetIndex, 0, item);
 
                                             // notify subscribers
-											if (sourceParent.valueHasMutated) {
-												sourceParent.valueHasMutated();
-											}
+                                            if (sourceParent.valueHasMutated) {
+                                                sourceParent.valueHasMutated();
+                                            }
                                         }
                                     }
                                     else {
