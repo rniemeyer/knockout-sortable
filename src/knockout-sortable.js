@@ -167,6 +167,8 @@
             //initialize sortable binding after template binding has rendered in update function
             var createTimeout = setTimeout(function() {
                 var dragItem;
+				var originalReceive = sortable.options.receive;
+
                 $element.sortable(ko.utils.extend(sortable.options, {
                     start: function(event, ui) {
                         //track original index
@@ -180,8 +182,11 @@
                         }
                     },
                     receive: function(event, ui) {
-                    	if (sortable.accept && !sortable.accept(event, ui))
-                    		return;
+						//optionally apply an existing receive handler
+                    	if (typeof originalReceive === "function") {
+							originalReceive.call(this, event, ui);
+						}
+
                         dragItem = dataGet(ui.item[0], DRAGKEY);
                         if (dragItem) {
                             //copy the model item, if a clone option is provided
@@ -194,7 +199,6 @@
                                 dragItem = sortable.dragged.call(this, dragItem, event, ui) || dragItem;
                             }
                         }
-                    	else $element.sortable('cancel'); // should work but doesn't: https://bugs.jqueryui.com/ticket/14734
                     },
                     update: function(event, ui) {
                         var sourceParent, targetParent, sourceIndex, targetIndex, arg,
@@ -203,7 +207,7 @@
                             item = dataGet(el, ITEMKEY) || dragItem;
 
                         if (!item) {
-                        	$(el).remove(); // workaround for https://bugs.jqueryui.com/ticket/14734
+                        	$(el).remove();
                         }
                         dragItem = null;
 
