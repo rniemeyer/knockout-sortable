@@ -268,6 +268,11 @@
                                         if (ko.processAllDeferredBindingUpdates) {
                                             ko.processAllDeferredBindingUpdates();
                                         }
+                                        
+                                        //if using deferred updates on knockout 3.4, force updates
+                                        if(ko.options.deferUpdates) {
+                                            ko.tasks.runEarly();
+                                        }
                                     }
 
                                     targetParent.splice(targetIndex, 0, item);
@@ -287,6 +292,11 @@
                                             //if using deferred updates plugin, force updates
                                             if (ko.processAllDeferredBindingUpdates) {
                                                 ko.processAllDeferredBindingUpdates();
+                                            }
+                                            
+                                            //if using deferred updates on knockout 3.4, force updates
+                                            if(ko.options.deferUpdates) {
+                                                ko.tasks.runEarly();
                                             }
 
                                             targetParent.splice(targetIndex, 0, item);
