@@ -1,4 +1,4 @@
-// knockout-sortable 0.14.0 | (c) 2016 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.14.1 | (c) 2016 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -271,7 +271,7 @@
                                         }
 
                                         //if using deferred updates on knockout 3.4, force updates
-                                        if (ko.options.deferUpdates) {
+                                        if (ko.options && ko.options.deferUpdates) {
                                             ko.tasks.runEarly();
                                         }
                                     }
