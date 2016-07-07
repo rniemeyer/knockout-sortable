@@ -166,7 +166,9 @@
             };
 
             //initialize sortable binding after template binding has rendered in update function
+            var initialised = false;
             var createTimeout = setTimeout(function() {
+                initialised = true;
                 var dragItem;
                 var originalReceive = sortable.options.receive;
 
@@ -355,6 +357,21 @@
                 }
             }, 0);
 
+            //refresh sortable elements when the observable changes
+            var sub = null;
+            if (ko.isObservable(templateOptions.foreach)) {
+              sub = templateOptions.foreach.subscribe(function() {
+                function refresh() {
+                  if (initialised)
+                    $element.sortable("refresh");
+                };
+                if (ko.options && ko.options.deferUpdates)
+                  ko.tasks.schedule(refresh);
+                else
+                  setTimeout(refresh, 0);
+              });
+            }
+
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
                 //only call destroy if sortable has been created
@@ -366,6 +383,8 @@
 
                 //do not create the sortable if the element has been removed from DOM
                 clearTimeout(createTimeout);
+
+                if (sub) sub.dispose();
             });
 
             return { 'controlsDescendantBindings': true };
