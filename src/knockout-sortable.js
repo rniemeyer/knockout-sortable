@@ -361,7 +361,7 @@
             if (ko.isObservable(templateOptions.foreach)) {
               sub = templateOptions.foreach.subscribe(function() {
                 function refresh() {
-                  if (initialised)
+                  if ($element.data("ui-sortable") || $element.data("sortable"))
                     $element.sortable("refresh");
                 };
                 if (ko.options && ko.options.deferUpdates)
@@ -384,6 +384,8 @@
                 clearTimeout(createTimeout);
 
                 if (sub) sub.dispose();
+
+                initialised = false;
             });
 
             return { 'controlsDescendantBindings': true };
