@@ -1,4 +1,4 @@
-// knockout-sortable 0.14.1 | (c) 2016 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 0.15.0 | (c) 2016 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -155,15 +155,17 @@
             startActual = sortable.options.start;
             updateActual = sortable.options.update;
 
-            //ensure draggable table row cells maintain their width while dragging
-            sortable.options.helper = function(e, ui) {
-                if (ui.is("tr")) {
-                    ui.children().each(function() {
-                        $(this).width($(this).width());
-                    });
-                }
-                return ui;
-            };
+            //ensure draggable table row cells maintain their width while dragging (unless a helper is provided)
+            if ( !sortable.options.helper ) {
+                sortable.options.helper = function(e, ui) {
+                    if (ui.is("tr")) {
+                        ui.children().each(function() {
+                            $(this).width($(this).width());
+                        });
+                    }
+                    return ui;
+                };
+            }
 
             //initialize sortable binding after template binding has rendered in update function
             var createTimeout = setTimeout(function() {
