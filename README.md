@@ -110,10 +110,9 @@ This library also includes a `draggable` binding that you can place on single it
 
 * Knockout 2.0+
 * jQuery - no specific version identified yet as minimum
-* jQuery UI - no specific version identfied yet as minimum
+* jQuery UI - If needing AMD/CommonJS support, then it requires >=1.12 (or ensuring that paths are mapped via config properly - it looks for `jquery-ui/ui/widgets/sortable` and `jquery-ui/ui/widgets/draggable`)
 
 **Touch Support** - for touch support take a look at: http://touchpunch.furf.com/
-
 
 **Build:** This project uses [grunt](http://gruntjs.com/) for building/minifying.
 

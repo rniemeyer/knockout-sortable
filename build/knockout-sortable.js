@@ -1,14 +1,14 @@
-// knockout-sortable 0.15.0 | (c) 2016 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 1.0.0 | (c) 2016 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
-        define(["knockout", "jquery", "jquery-ui/sortable", "jquery-ui/draggable"], factory);
+        define(["knockout", "jquery", "jquery-ui/ui/widgets/sortable", "jquery-ui/ui/widgets/draggable"], factory);
     } else if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
         // CommonJS module
         var ko = require("knockout"),
             jQuery = require("jquery");
-        require("jquery-ui/sortable");
-        require("jquery-ui/draggable");
+        require("jquery-ui/ui/widgets/sortable");
+        require("jquery-ui/ui/widgets/draggable");
         factory(ko, jQuery);
     } else {
         // No module loader (plain <script> tag) - put directly in global namespace
