@@ -1143,4 +1143,156 @@ describe("knockout-sortable", function(){
             });
         });
     });
+
+    describe("droppable binding", function(){
+        var options;
+        describe("when dropping to an function", function () {
+            var result;
+            beforeEach(function () {
+                result = null;
+                options = {
+                    elems: $("<div data-bind='droppable: dropTo'></div>"),
+                    vm: { 
+                        dropTo:function(item) {
+                            result = item;
+                        }
+                     }
+                };
+                setup(options);
+            });
+            it("it should have droppable instance", function () {
+                expect(options.root.droppable("instance")).toBeTruthy();
+            });
+        });
+        describe("when dropping to an observable", function () {
+            beforeEach(function () {
+                options = {
+                    elems: $("<div data-bind='droppable: dropTo'></div>"),
+                    vm: { 
+                        dropTo:ko.observable(undefined)
+                     }
+                };
+                setup(options);
+            });
+            it("it should have droppable instance", function () {
+                expect(options.root.droppable("instance")).toBeTruthy();
+            });
+        });
+        describe("when using options", function () {
+            beforeEach(function () {
+                options = {
+                    elems: $("<div data-bind='droppable:{data:dropTo, options:{greedy:true,accept:\".test-accepts\"}}'></div>"),
+                    vm: { 
+                        dropTo:ko.observable(undefined)
+                     }
+                };
+                setup(options);
+            });
+            it("the options should be set", function (done) {
+                setTimeout(function() {
+                    expect(options.root.droppable("option", "greedy")).toBeTruthy();
+                    expect(options.root.droppable("option", "accept")).toEqual(".test-accepts");
+                    done();
+                }, 10);
+            });
+        });
+
+        
+        describe("when setting isEnabled globally", function() {
+            var options;
+            beforeEach(function() {
+                options = {
+                    elems: $("<div data-bind='droppable: dropTo'></div>"),
+                    vm: {
+                        dropTo:ko.observable(undefined),
+                        isEnabled: ko.observable(false)
+                    }
+                };
+            });
+
+            describe("when isEnabled is an observable", function() {
+                beforeEach(function() {
+                    ko.bindingHandlers.droppable.isEnabled = options.vm.isEnabled;
+                    setup(options);
+                });
+
+                it("should be initially disabled", function(done) {
+                    setTimeout(function() {
+                        expect(options.root.droppable("option", "disabled")).toBeTruthy();
+                        done();
+                    }, 0);
+                });
+
+                it("should become enabled when observable is changed to true", function(done) {
+                    setTimeout(function() {
+                        options.vm.isEnabled(true);
+                        expect(options.root.droppable("option", "disabled")).toBeFalsy();
+                        done();
+                    }, 0);
+                });
+            });
+
+            describe("when isEnabled is a non-observable", function() {
+                beforeEach(function() {
+                    ko.bindingHandlers.droppable.isEnabled = false;
+                    setup(options);
+                });
+
+                it("should be initially disabled", function(done) {
+                    setTimeout(function() {
+                        expect(options.root.droppable("option", "disabled")).toBeTruthy();
+                        done();
+                    }, 0);
+                });
+            });
+        });
+
+        describe("when setting isEnabled in the binding", function() {
+            var options;
+            beforeEach(function() {
+                options = {
+                    elems: $("<div data-bind='droppable: { data: dropTo, isEnabled: isEnabled }'></div>"),
+                    vm: {
+                        dropTo:ko.observable(undefined),
+                        isEnabled: ko.observable(false)
+                    }
+                };
+            });
+
+            describe("when isEnabled is an observable", function() {
+                beforeEach(function() {
+                    setup(options);
+                });
+
+                it("should be initially disabled", function(done) {
+                    setTimeout(function() {
+                        expect(options.root.droppable("option", "disabled")).toBeTruthy();
+                        done();
+                    }, 0);
+                });
+
+                it("should become enabled when observable is changed to true", function(done) {
+                    setTimeout(function() {
+                        options.vm.isEnabled(true);
+                        expect(options.root.droppable("option", "disabled")).toBeFalsy();
+                        done();
+                    }, 0);
+                });
+            });
+
+            describe("when isEnabled is a non-observable", function() {
+                beforeEach(function() {
+                    options.vm.isEnabled = false;
+                    setup(options);
+                });
+
+                it("should be initially disabled", function(done) {
+                    setTimeout(function() {
+                        expect(options.root.droppable("option", "disabled")).toBeTruthy();
+                        done();
+                    }, 0);
+                });
+            });
+        });
+    });
 });

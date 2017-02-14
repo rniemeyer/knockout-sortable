@@ -105,6 +105,27 @@ This library also includes a `draggable` binding that you can place on single it
 
 * **options** - specify any additional options to pass on to the `.draggable` jQuery UI call.  These options can be specified in the binding or specified globally by setting `ko.bindingHandlers.draggable.options`.
 
+**Droppable binding**
+
+This library also includes a `droppable` binding that you can place on items which are targets for any `draggable` item.  The binding can update an `observable` or a simple `function` on your viewmodel.
+
+```html
+<div data-bind="droppable: dropTo">
+  <span>Drop Items Here</span>
+</div>
+```
+
+**Additional options**
+
+* **isEnabled** - specify whether the droppable widget should be enabled.  If this is an observable, then it will enable/disable the widget when the observable's value changes.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.droppable.isEnabled`.
+
+* **options** - specify any additional option to pass to the `.droppable` jQuery UI call.  When using options, your method or observable should be provided on the `data` property.
+
+```html
+<div data-bind="droppable: {data:dropTo, isEnabled:enableDrop, options:{greedy:true}}">
+  <span>Drop Items Here</span>
+</div
+```
 
 **Dependencies**
 
