@@ -438,4 +438,44 @@
             helper: "clone"
         }
     };
+    
+    // Simple Droppable Implementation
+    // binding that updates (function or observable)
+    ko.bindingHandlers.droppable = {
+        init: function (element, valueAccessor, allBindingsAccessor, data, context) {
+            var value = unwrap(valueAccessor()) || {},
+                connectClass = value.connectClass || ko.bindingHandlers.droppable.connectClass,
+                isEnabled = value.isEnabled !== undefined ? value.isEnabled : ko.bindingHandlers.droppable.isEnabled;
+
+            value = "data" in value ? value.data : value;
+
+            //set options
+            var droppableOptions = {
+                accept: "*", // seems to fail when set to connectClass as would be expected
+                drop: function (event, ui) {
+                    var droppedItem = dataGet(ui.draggable[0], DRAGKEY);
+                    value(droppedItem);
+                }
+            }
+
+            //initialize droppable
+            $(element).droppable(droppableOptions);
+
+            //handle enabling/disabling sorting
+            if (isEnabled !== undefined) {
+                ko.computed({
+                    read: function () {
+                        $(element).droppable(unwrap(isEnabled) ? "enable" : "disable");
+                    },
+                    disposeWhenNodeIsRemoved: element
+                });
+            }
+
+            //handle disposal
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                $(element).droppable("destroy");
+            });
+        },
+        connectClass: ko.bindingHandlers.sortable.connectClass
+    };
 });
