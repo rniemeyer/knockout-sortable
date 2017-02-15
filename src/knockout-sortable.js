@@ -1,13 +1,14 @@
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
-        define(["knockout", "jquery", "jquery-ui/ui/widgets/sortable", "jquery-ui/ui/widgets/draggable"], factory);
+        define(["knockout", "jquery", "jquery-ui/ui/widgets/sortable", "jquery-ui/ui/widgets/draggable", "jquery-ui/ui/widgets/droppable"], factory);
     } else if (typeof require === "function" && typeof exports === "object" && typeof module === "object") {
         // CommonJS module
         var ko = require("knockout"),
             jQuery = require("jquery");
         require("jquery-ui/ui/widgets/sortable");
         require("jquery-ui/ui/widgets/draggable");
+        require("jquery-ui/ui/widgets/droppable");
         factory(ko, jQuery);
     } else {
         // No module loader (plain <script> tag) - put directly in global namespace
