@@ -119,10 +119,10 @@ This library also includes a `droppable` binding that you can place on items whi
 
 * **isEnabled** - specify whether the droppable widget should be enabled.  If this is an observable, then it will enable/disable the widget when the observable's value changes.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.droppable.isEnabled`.
 
-* **options** - specify any additional option to pass to the `.droppable` jQuery UI call.  When using options, your method or observable should be provided on the `drop` property.
+* **options** - specify any additional option to pass to the `.droppable` jQuery UI call.  When using options, your method or observable should be provided on the `data` property.
 
 ```html
-<div data-bind="droppable: {drop:dropTo, isEnabled:enableDrop, options:{greedy:true}}">
+<div data-bind="droppable: {data:dropTo, isEnabled:enableDrop, options:{greedy:true}}">
   <span>Drop Items Here</span>
 </div
 ```

@@ -1181,7 +1181,7 @@ describe("knockout-sortable", function(){
         describe("when using options", function () {
             beforeEach(function () {
                 options = {
-                    elems: $("<div data-bind='droppable:{drop:dropTo, options:{greedy:true,accept:\".test-accepts\"}}'></div>"),
+                    elems: $("<div data-bind='droppable:{data:dropTo, options:{greedy:true,accept:\".test-accepts\"}}'></div>"),
                     vm: { 
                         dropTo:ko.observable(undefined)
                      }
@@ -1251,7 +1251,7 @@ describe("knockout-sortable", function(){
             var options;
             beforeEach(function() {
                 options = {
-                    elems: $("<div data-bind='droppable: { drop: dropTo, isEnabled: isEnabled }'></div>"),
+                    elems: $("<div data-bind='droppable: { data: dropTo, isEnabled: isEnabled }'></div>"),
                     vm: {
                         dropTo:ko.observable(undefined),
                         isEnabled: ko.observable(false)

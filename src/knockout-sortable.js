@@ -452,7 +452,7 @@
             ko.utils.extend(droppableOptions, options);
 
             //get reference to drop method
-            value = "drop" in value ? value.data : value;
+            value = "data" in value ? value.data : value;
 
             //set drop method
             droppableOptions.drop = function (event, ui) {
