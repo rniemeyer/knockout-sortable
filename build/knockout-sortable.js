@@ -1,4 +1,4 @@
-// knockout-sortable 1.0.0 | (c) 2016 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 1.0.0 | (c) 2017 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -437,6 +437,50 @@
         connectClass: ko.bindingHandlers.sortable.connectClass,
         options: {
             helper: "clone"
+        }
+    };
+    
+    // Simple Droppable Implementation
+    // binding that updates (function or observable)
+    ko.bindingHandlers.droppable = {
+        init: function (element, valueAccessor, allBindingsAccessor, data, context) {
+            var value = unwrap(valueAccessor()) || {},
+                options = value.options || {},
+                droppableOptions = ko.utils.extend({}, ko.bindingHandlers.droppable.options),
+                isEnabled = value.isEnabled !== undefined ? value.isEnabled : ko.bindingHandlers.droppable.isEnabled;
+
+            //override global options with override options passed in
+            ko.utils.extend(droppableOptions, options);
+
+            //get reference to drop method
+            value = "drop" in value ? value.data : value;
+
+            //set drop method
+            droppableOptions.drop = function (event, ui) {
+                var droppedItem = dataGet(ui.draggable[0], DRAGKEY);
+                value(droppedItem);
+            };
+
+            //initialize droppable
+            $(element).droppable(droppableOptions);
+
+            //handle enabling/disabling sorting
+            if (isEnabled !== undefined) {
+                ko.computed({
+                    read: function () {
+                        $(element).droppable(unwrap(isEnabled) ? "enable" : "disable");
+                    },
+                    disposeWhenNodeIsRemoved: element
+                });
+            }
+
+            //handle disposal
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+                $(element).droppable("destroy");
+            });
+        },
+        options: {
+            accept: "*"
         }
     };
 });

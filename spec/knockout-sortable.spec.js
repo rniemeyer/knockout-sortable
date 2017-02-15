@@ -1143,4 +1143,58 @@ describe("knockout-sortable", function(){
             });
         });
     });
+
+    describe("droppable binding", function(){
+        var options;
+        describe("when dropping to an function", function () {
+            var result;
+            beforeEach(function () {
+                result = null;
+                options = {
+                    elems: $("<div data-bind='droppable: dropTo'></div>"),
+                    vm: { 
+                        dropTo:function(item) {
+                            result = item;
+                        }
+                     }
+                };
+                setup(options);
+            });
+            it("it should have droppable instance", function () {
+                expect(options.root.droppable("instance")).toBeTruthy();
+            });
+        });
+        describe("when dropping to an observable", function () {
+            beforeEach(function () {
+                options = {
+                    elems: $("<div data-bind='droppable: dropTo'></div>"),
+                    vm: { 
+                        dropTo:ko.observable(undefined)
+                     }
+                };
+                setup(options);
+            });
+            it("it should have droppable instance", function () {
+                expect(options.root.droppable("instance")).toBeTruthy();
+            });
+        });
+        describe("when using options", function () {
+            beforeEach(function () {
+                options = {
+                    elems: $("<div data-bind='droppable:{drop:dropTo, options:{greedy:true,accepts:\".test-accepts\"}}'></div>"),
+                    vm: { 
+                        dropTo:ko.observable(undefined)
+                     }
+                };
+                setup(options);
+            });
+            it("the options should be set", function (done) {
+                setTimeout(function() {
+                    expect(options.root.droppable("option", "greedy")).toBeTruthy();
+                    expect(options.root.droppable("option", "accepts")).toEqual(".test-accepts");
+                    done();
+                }, 10);
+            });
+        });
+    });
 });

@@ -444,19 +444,21 @@
     ko.bindingHandlers.droppable = {
         init: function (element, valueAccessor, allBindingsAccessor, data, context) {
             var value = unwrap(valueAccessor()) || {},
-                connectClass = value.connectClass || ko.bindingHandlers.droppable.connectClass,
+                options = value.options || {},
+                droppableOptions = ko.utils.extend({}, ko.bindingHandlers.droppable.options),
                 isEnabled = value.isEnabled !== undefined ? value.isEnabled : ko.bindingHandlers.droppable.isEnabled;
 
-            value = "data" in value ? value.data : value;
+            //override global options with override options passed in
+            ko.utils.extend(droppableOptions, options);
 
-            //set options
-            var droppableOptions = {
-                accept: "*", // seems to fail when set to connectClass as would be expected
-                drop: function (event, ui) {
-                    var droppedItem = dataGet(ui.draggable[0], DRAGKEY);
-                    value(droppedItem);
-                }
-            }
+            //get reference to drop method
+            value = "drop" in value ? value.data : value;
+
+            //set drop method
+            droppableOptions.drop = function (event, ui) {
+                var droppedItem = dataGet(ui.draggable[0], DRAGKEY);
+                value(droppedItem);
+            };
 
             //initialize droppable
             $(element).droppable(droppableOptions);
@@ -476,6 +478,8 @@
                 $(element).droppable("destroy");
             });
         },
-        connectClass: ko.bindingHandlers.sortable.connectClass
+        options: {
+            accept: "*"
+        }
     };
 });
