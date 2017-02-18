@@ -43,7 +43,7 @@ Note2: (*Update: 0.9.0 adds code to automatically strip leading/trailing whitesp
 
 **Additional Options**
 
-* **connectClass** - specify the class that should be used to indicate a droppable target.  The default class is "ko_container".  This value can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.connectClass`.
+* **connectClass** - specify the class that should be used to indicate a droppable target.  The default class is "ko_container".  This value can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.connectClass`.  Setting this to false in the binding will limit sortable items to their current container, which is useful when the sortable binding is nested in a foreach binding.
 
 * **allowDrop** - specify whether this container should be a target for drops.  This can be a static value, observable, or a function that is passed the observableArray as its first argument.  If a function is specified, then it will be executed in a computed observable, so it will run again whenever any dependencies are updated.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.sortable.allowDrop`.
 
