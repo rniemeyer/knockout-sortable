@@ -439,6 +439,122 @@
             helper: "clone"
         }
     };
+	
+    ko.bindingHandlers.droppable = {
+    	init: function (element, valueAccessor, allBindingsAccessor, data, context) {
+    		var $element = $(element),
+                value = ko.utils.unwrapObservable(valueAccessor()) || {},
+                droppable = {},
+                dropActual;
+
+    		$.extend(true, droppable, ko.bindingHandlers.droppable);
+    		if (value.data) {
+    			if (value.options && droppable.options) {
+    				ko.utils.extend(droppable.options, value.options);
+    				delete value.options;
+    			}
+    			ko.utils.extend(droppable, value);
+    		} else {
+    			droppable.data = value;
+    		}   
+    			   		
+
+    		dropActual = droppable.options.drop;
+
+    		$element.droppable(ko.utils.extend(droppable.options, {
+    			drop: function (event, ui) {
+    				var sourceParent, targetParent, targetIndex, i, targetUnwrapped, arg,
+						   el = ui.draggable[0],
+						   item = ko.utils.domData.get(el, ITEMKEY) || ko.utils.domData.get(el, DRAGKEY);
+
+    				if (item && item.clone)
+    					item = item.clone();
+
+    				if (item) {
+    					sourceParent = ko.utils.domData.get(el, PARENTKEY);
+    					targetParent = droppable.data;
+
+    					if (droppable.beforeMove || droppable.afterMove) {
+    						arg = {
+    							item: item,
+    							sourceParent: sourceParent,
+    							sourceParentNode: sourceParent && el.parentNode,
+    							sourceIndex: sourceParent && sourceParent.indexOf(item),
+    							targetParent: targetParent,
+    							targetIndex: droppable.targetIndex,
+    							cancelDrop: false
+    						};
+    					}
+
+    					if (droppable.beforeMove) {
+    						droppable.beforeMove.call(this, arg, event, ui);
+    						if (arg.cancelDrop) {
+    							//call cancel on the correct list
+    							if (arg.sourceParent) {
+    								$(arg.sourceParentNode).sortable('cancel');
+    							}
+    							return;
+    						}
+    						targetIndex = arg.targetIndex;
+    					}
+
+    					if (sourceParent) {
+    						sourceParent.remove(item);
+
+    						//if using deferred updates plugin, force updates
+    						if (ko.processAllDeferredBindingUpdates) {
+    							ko.processAllDeferredBindingUpdates();
+    						}
+    					}
+
+						//is the target an observableArray
+    					if (ko.isObservable(targetParent) && targetParent.splice != undefined) {
+    						if (targetIndex && targetIndex >= 0)
+    							targetParent.splice(targetIndex, 0, item);
+    						else
+    							targetParent.push(item);
+    					}
+
+    					//rendering is handled by manipulating the observableArray; ignore dropped element
+    					ko.utils.domData.set(el, ITEMKEY, null);
+    					ui.draggable.remove();
+
+    					//if using deferred updates plugin, force updates
+    					if (ko.processAllDeferredBindingUpdates) {
+    						ko.processAllDeferredBindingUpdates();
+    					}
+
+    					//allow binding to accept a function to execute after moving the item
+    					if (droppable.afterMove) {
+    						droppable.afterMove.call(this, arg, event, ui);
+    					}
+
+    					if (dropActual) {
+    						dropActual.apply(this, arguments);
+    					}
+    				}
+    			}
+    		}));
+
+    		//handle enabling/disabling
+    		if (droppable.isEnabled !== undefined) {
+    			ko.computed({
+    				read: function () {
+    					$element.droppable(ko.utils.unwrapObservable(droppable.isEnabled) ? "enable" : "disable");
+    				},
+    				disposeWhenNodeIsRemoved: element
+    			});
+    		}
+
+    	},
+    	update: function (element, valueAccessor, allBindingsAccessor, data, context) {
+
+    	},
+    	targetIndex: null,
+    	afterMove: null,
+    	beforeMove: null,
+    	options: {}
+    };
 
     // Simple Droppable Implementation
     // binding that updates (function or observable)
