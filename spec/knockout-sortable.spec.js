@@ -242,7 +242,7 @@ describe("knockout-sortable", function(){
 
             it("should call .sortable on the root element", function(done) {
                 setTimeout(function() {
-                    expect(options.root.data("sortable")).toBeDefined();
+                    expect(options.root.data("uiSortable")).toBeDefined();
                     expect(options.root.hasClass("ui-sortable")).toBeTruthy();
                     done();
                 }, 0);
@@ -951,7 +951,7 @@ describe("knockout-sortable", function(){
             });
 
             it("should call draggable on the element", function() {
-                expect(options.root.data("draggable")).toBeDefined();
+                expect(options.root.data("uiDraggable")).toBeDefined();
             });
 
             it("should use the default connectClass", function() {
@@ -1146,49 +1146,53 @@ describe("knockout-sortable", function(){
 
     describe("droppable binding", function(){
         var options;
-        describe("when dropping to an function", function () {
+
+        describe("when dropping to a function", function() {
             var result;
-            beforeEach(function () {
+            beforeEach(function() {
                 result = null;
                 options = {
                     elems: $("<div data-bind='droppable: dropTo'></div>"),
-                    vm: { 
-                        dropTo:function(item) {
+                    vm: {
+                        dropTo: function(item) {
                             result = item;
                         }
                      }
                 };
                 setup(options);
             });
-            it("it should have droppable instance", function () {
+
+            it("it should have droppable instance", function() {
                 expect(options.root.droppable("instance")).toBeTruthy();
             });
         });
-        describe("when dropping to an observable", function () {
-            beforeEach(function () {
+        describe("when dropping to an observable", function() {
+            beforeEach(function() {
                 options = {
                     elems: $("<div data-bind='droppable: dropTo'></div>"),
-                    vm: { 
-                        dropTo:ko.observable(undefined)
+                    vm: {
+                        dropTo: ko.observable()
                      }
                 };
                 setup(options);
             });
-            it("it should have droppable instance", function () {
+
+            it("it should have droppable instance", function() {
                 expect(options.root.droppable("instance")).toBeTruthy();
             });
         });
-        describe("when using options", function () {
-            beforeEach(function () {
+        describe("when using options", function() {
+            beforeEach(function() {
                 options = {
-                    elems: $("<div data-bind='droppable:{data:dropTo, options:{greedy:true,accept:\".test-accepts\"}}'></div>"),
-                    vm: { 
-                        dropTo:ko.observable(undefined)
+                    elems: $("<div data-bind='droppable:{drop:dropTo, options:{greedy:true,accept:\".test-accepts\"}}'></div>"),
+                    vm: {
+                        dropTo :ko.observable()
                      }
                 };
                 setup(options);
             });
-            it("the options should be set", function (done) {
+
+            it("the options should be set", function(done) {
                 setTimeout(function() {
                     expect(options.root.droppable("option", "greedy")).toBeTruthy();
                     expect(options.root.droppable("option", "accept")).toEqual(".test-accepts");
@@ -1197,14 +1201,14 @@ describe("knockout-sortable", function(){
             });
         });
 
-        
         describe("when setting isEnabled globally", function() {
             var options;
+
             beforeEach(function() {
                 options = {
                     elems: $("<div data-bind='droppable: dropTo'></div>"),
                     vm: {
-                        dropTo:ko.observable(undefined),
+                        dropTo: ko.observable(),
                         isEnabled: ko.observable(false)
                     }
                 };
@@ -1251,7 +1255,7 @@ describe("knockout-sortable", function(){
             var options;
             beforeEach(function() {
                 options = {
-                    elems: $("<div data-bind='droppable: { data: dropTo, isEnabled: isEnabled }'></div>"),
+                    elems: $("<div data-bind='droppable: { drop: dropTo, isEnabled: isEnabled }'></div>"),
                     vm: {
                         dropTo:ko.observable(undefined),
                         isEnabled: ko.observable(false)

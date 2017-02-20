@@ -1,4 +1,4 @@
-// knockout-sortable 1.0.0 | (c) 2017 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 1.1.0 | (c) 2017 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -440,11 +440,11 @@
             helper: "clone"
         }
     };
-    
+
     // Simple Droppable Implementation
     // binding that updates (function or observable)
     ko.bindingHandlers.droppable = {
-        init: function (element, valueAccessor, allBindingsAccessor, data, context) {
+        init: function(element, valueAccessor, allBindingsAccessor, data, context) {
             var value = unwrap(valueAccessor()) || {},
                 options = value.options || {},
                 droppableOptions = ko.utils.extend({}, ko.bindingHandlers.droppable.options),
@@ -454,29 +454,29 @@
             ko.utils.extend(droppableOptions, options);
 
             //get reference to drop method
-            value = "data" in value ? value.data : value;
+            value = "data" in value ? value.data : valueAccessor();
 
             //set drop method
-            droppableOptions.drop = function (event, ui) {
-                var droppedItem = dataGet(ui.draggable[0], DRAGKEY);
+            droppableOptions.drop = function(event, ui) {
+                var droppedItem = dataGet(ui.draggable[0], DRAGKEY) || dataGet(ui.draggable[0], ITEMKEY);
                 value(droppedItem);
             };
 
             //initialize droppable
             $(element).droppable(droppableOptions);
 
-            //handle enabling/disabling sorting
+            //handle enabling/disabling droppable
             if (isEnabled !== undefined) {
                 ko.computed({
-                    read: function () {
-                        $(element).droppable(unwrap(isEnabled) ? "enable" : "disable");
+                    read: function() {
+                        $(element).droppable(unwrap(isEnabled) ? "enable": "disable");
                     },
                     disposeWhenNodeIsRemoved: element
                 });
             }
 
             //handle disposal
-            ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
                 $(element).droppable("destroy");
             });
         },
