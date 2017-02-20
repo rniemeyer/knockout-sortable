@@ -430,8 +430,14 @@
             return ko.bindingHandlers.template.init(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
         },
         update: function(element, valueAccessor, allBindingsAccessor, data, context) {
-            var templateOptions = prepareTemplateOptions(valueAccessor, "data");
+            var value = unwrap(valueAccessor()) || {},
+            templateOptions = prepareTemplateOptions(valueAccessor, "data");
 
+            value = "data" in value ? value.data : value;
+
+            //set meta-data
+            dataSet(element, DRAGKEY, value);
+            
             return ko.bindingHandlers.template.update(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
         },
         connectClass: ko.bindingHandlers.sortable.connectClass,
