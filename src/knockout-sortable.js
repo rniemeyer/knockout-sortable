@@ -273,7 +273,11 @@
                                         }
 
                                         //if using deferred updates on knockout 3.4, force updates
-                                        if ((ko.options && ko.options.deferUpdates) || (sourceParent && sourceParent._deferUpdates)) {
+                                        //if ((ko.options && ko.options.deferUpdates) || (sourceParent && sourceParent._deferUpdates)) {
+                                        //    ko.tasks.runEarly();
+                                        //}
+
+                                        if (typeof ko.tasks.runEarly === "function") {
                                             ko.tasks.runEarly();
                                         }
                                     }
