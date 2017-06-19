@@ -458,7 +458,7 @@
             //set drop method
             droppableOptions.drop = function(event, ui) {
                 var droppedItem = dataGet(ui.draggable[0], DRAGKEY) || dataGet(ui.draggable[0], ITEMKEY);
-                value(droppedItem);
+                value(droppedItem, event, ui);
             };
 
             //initialize droppable
