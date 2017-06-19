@@ -1154,7 +1154,7 @@ describe("knockout-sortable", function(){
                 options = {
                     elems: $("<div data-bind='droppable: dropTo'></div>"),
                     vm: {
-                        dropTo: function(item, event, ui) {
+                        dropTo: function(item) {
                             result = item;
                         }
                      }
