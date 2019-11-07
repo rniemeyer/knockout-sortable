@@ -40,13 +40,16 @@
     //prepare the proper options for the template binding
     var prepareTemplateOptions = function(valueAccessor, dataName) {
         var result = {},
-            options = unwrap(valueAccessor()) || {},
+            options = {},
             actualAfterRender;
 
         //build our options to pass to the template engine
-        if (options.data) {
+        if (ko.utils.peekObservable(valueAccessor()).data) {
+            options = unwrap(valueAccessor() || {});
             result[dataName] = options.data;
-            result.name = options.template;
+            if (options.hasOwnProperty("template")) {
+                result.name = options.template;
+            }
         } else {
             result[dataName] = valueAccessor();
         }
