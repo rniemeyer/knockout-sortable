@@ -399,6 +399,8 @@
                 draggableOptions = ko.utils.extend({}, ko.bindingHandlers.draggable.options),
                 templateOptions = prepareTemplateOptions(valueAccessor, "data"),
                 connectClass = value.connectClass || ko.bindingHandlers.draggable.connectClass,
+                handleDragStart = value.dragStart || false,
+                handleDragStop = value.dragStop || false,
                 isEnabled = value.isEnabled !== undefined ? value.isEnabled : ko.bindingHandlers.draggable.isEnabled;
 
             value = "data" in value ? value.data : value;
@@ -424,9 +426,24 @@
                     disposeWhenNodeIsRemoved: element
                 });
             }
+            // register dragstart  event if required
+            if (typeof handleDragStart == "function") {
+                $(element).on( "dragstart", function(event, ui) {
+                    var dragItem = dataGet(ui.helper.context, DRAGKEY);
+                    handleDragStart.call(this, dragItem, event, ui);
+                });
+            }
+            // register dragstop  event if required
+            if (typeof handleDragStop == "function") {
+                $(element).on( "dragstop", function(event, ui) {
+                    var dragItem = dataGet(ui.helper.context, DRAGKEY);
+                    handleDragStop.call(this, dragItem, event, ui);
+                });
+            }
 
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                $(element).off(); // unregister events
                 $(element).draggable("destroy");
             });
 

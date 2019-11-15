@@ -103,6 +103,10 @@ This library also includes a `draggable` binding that you can place on single it
 
 * **isEnabled** - specify whether the draggable widget should be enabled.  If this is an observable, then it will enable/disable the widget when the observable's value changes.  This option can be passed in the binding or configured globally by setting `ko.bindingHandlers.draggable.isEnabled`.
 
+* **dragstart** - specify a function to received the item being dragged when the drag starts.
+
+* **dragstop** - specify a function to received the item being dragged when the drag stops.
+
 * **options** - specify any additional options to pass on to the `.draggable` jQuery UI call.  These options can be specified in the binding or specified globally by setting `ko.bindingHandlers.draggable.options`.
 
 **Droppable binding**
