@@ -427,7 +427,9 @@
 
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-                $(element).draggable("destroy");
+                if ($element.data("ui-draggable") || $element.data("draggable")) {
+                    $element.draggable("destroy");
+                }
             });
 
             return ko.bindingHandlers.template.init(element, function() { return templateOptions; }, allBindingsAccessor, data, context);
@@ -479,7 +481,9 @@
 
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
-                $(element).droppable("destroy");
+                if ($element.data("ui-droppable") || $element.data("droppable")) {
+                    $element.droppable("destroy");
+                }
             });
         },
         options: {

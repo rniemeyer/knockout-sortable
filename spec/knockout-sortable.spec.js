@@ -958,7 +958,8 @@ describe("knockout-sortable", function(){
                 expect(options.root.draggable("option", "connectToSortable")).toEqual("." + defaults.connectClass);
             });
 
-            it("should be disposed on node", function() {
+            it("should be disposed on node removal", function() {
+                expect(options.root.hasClass("ui-draggable")).toBeTruthy();
                 ko.removeNode(options.root[0]);
                 expect(options.root.hasClass("ui-draggable")).toBeFalsy();
             });
@@ -1164,6 +1165,12 @@ describe("knockout-sortable", function(){
 
             it("it should have droppable instance", function() {
                 expect(options.root.droppable("instance")).toBeTruthy();
+            });
+
+            it("should be disposed on node removal", function() {
+                expect(options.root.hasClass("ui-droppable")).toBeTruthy();
+                ko.removeNode(options.root[0]);
+                expect(options.root.hasClass("ui-droppable")).toBeFalsy();
             });
         });
         describe("when dropping to an observable", function() {
