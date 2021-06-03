@@ -1173,6 +1173,34 @@ describe("knockout-sortable", function(){
                 expect(options.root.hasClass("ui-droppable")).toBeFalsy();
             });
         });
+
+        describe("when dropping to a function with multiple parameters", function() {
+            var result, resultEvent, resultUi;
+            beforeEach(function() {
+                result = null;
+                resultEvent = null;
+                resultUi = null;
+
+                options = {
+                    elems: $("<div data-bind='droppable: dropTo'></div>"),
+                    vm: {
+                        dropTo: function(item, event, ui) {
+                            result = item;
+                            resultEvent = event;
+                            resultUi = ui;
+                        }
+                    }
+                };
+
+                setup(options);
+            });
+
+            it("it should have droppable instance", function() {
+                expect(options.root.droppable("instance")).toBeTruthy();
+            });
+        });
+
+
         describe("when dropping to an observable", function() {
             beforeEach(function() {
                 options = {
