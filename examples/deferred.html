@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Draggable, droppable, and sortable list (2.0)</title>
+
+    <script type='text/javascript' src='../ext/jquery-1.9.1.js'></script>
+    <script type="text/javascript" src="../ext/jquery-ui.js"></script>
+
+    <script type='text/javascript' src="../ext/knockout-3.4.0.js"></script>
+    <script type='text/javascript' src="../src/knockout-sortable.js"></script>
+
+    <style type='text/css'>
+        body {
+            font-family: arial;
+        }
+
+        h3 {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        div {
+            padding: 5px;
+            margin: 5px;
+            border: black 1px solid;
+        }
+
+        p, a {
+            font-size: .8em;
+        }
+
+        ul {
+            padding-bottom: 10px;
+        }
+
+        .ko_container {
+            width: 125px;
+            min-height: 50px;
+            background-color: #AAA;
+        }
+
+        .high {
+            background-color: red;
+        }
+
+        .trash {
+            background-color: #000;
+        }
+
+        .item {
+            background-color: #DDD;
+            cursor: move;
+            text-align: center;
+        }
+
+        .item input {
+            width: 100px;
+        }
+
+        #main {
+            float: left;
+            width: 150px;
+            margin-top: 0px;
+        }
+
+        #results {
+            margin-left: 175px;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h3>Tasks</h3>
+        <div class="container" data-bind="sortable: { data: tasks }">
+            <!-- leading comment -->
+            <div class="item">
+                <span data-bind="visible: !$root.isTaskSelected($data)">
+                    <a href="#" data-bind="text: name, click: $root.selectedTask"></a>
+                </span>
+                <span data-bind="visibleAndSelect: $root.isTaskSelected($data)">
+                    <input data-bind="value: name, event: { blur: $root.clearTask }" />
+                </span>
+            </div>
+            <!-- trailing comment -->
+        </div>
+        <a href="#" data-bind="click: addTask">Add Task</a>
+    </div>
+
+    <div id="results">
+        <h3>Tasks</h3>
+        <ul data-bind="foreach: tasks">
+            <li data-bind="text: name"></li>
+        </ul>
+    </div>
+
+    <script type='text/javascript'>
+        var Task = function(name) {
+            this.name = ko.observable(name);
+        };
+
+        var ViewModel = function(data) {
+            var self = this;
+            self.tasks = ko.observableArray(data).extend({ deferred: true });
+
+
+            self.selectedTask = ko.observable();
+            self.clearTask = function(data, event) {
+                if (data === self.selectedTask()) {
+                    self.selectedTask(null);
+                }
+
+                if (data.name() === "") {
+                   self.tasks.remove(data);
+                }
+            };
+            self.addTask = function() {
+                var task = new Task("new");
+                self.selectedTask(task);
+                self.tasks.push(task);
+            };
+
+            self.isTaskSelected = function(task) {
+               return task === self.selectedTask();
+            };
+        };
+
+        //control visibility, give element focus, and select the contents (in order)
+        ko.bindingHandlers.visibleAndSelect = {
+            update: function(element, valueAccessor) {
+                ko.bindingHandlers.visible.update(element, valueAccessor);
+                if (valueAccessor()) {
+                    setTimeout(function() {
+                        $(element).find("input").focus().select();
+                    }, 0); //new tasks are not in DOM yet
+                }
+            }
+        };
+
+        var data = [];
+        for (var i = 0; i < 10; i++){
+            data.push(new Task("Task " + i));
+        }
+
+        ko.applyBindings(new ViewModel(data));
+    </script>
+</body>
+</html>
