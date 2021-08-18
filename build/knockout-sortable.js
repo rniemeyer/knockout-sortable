@@ -1,4 +1,4 @@
-// knockout-sortable 1.2.1 | (c) 2021 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
+// knockout-sortable 1.2.2 | (c) 2021 Ryan Niemeyer |  http://www.opensource.org/licenses/mit-license
 ;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
@@ -428,6 +428,7 @@
 
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                var $element = $(element);
                 if ($element.data("ui-draggable") || $element.data("draggable")) {
                     $element.draggable("destroy");
                 }
@@ -482,6 +483,7 @@
 
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                var $element = $(element);
                 if ($element.data("ui-droppable") || $element.data("droppable")) {
                     $element.droppable("destroy");
                 }

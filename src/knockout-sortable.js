@@ -427,6 +427,7 @@
 
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                var $element = $(element);
                 if ($element.data("ui-draggable") || $element.data("draggable")) {
                     $element.draggable("destroy");
                 }
@@ -481,6 +482,7 @@
 
             //handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                var $element = $(element);
                 if ($element.data("ui-droppable") || $element.data("droppable")) {
                     $element.droppable("destroy");
                 }
