@@ -1,4 +1,4 @@
-;(function(factory) {
+﻿;(function(factory) {
     if (typeof define === "function" && define.amd) {
         // AMD anonymous module
         define(["knockout", "jquery", "jquery-ui/ui/widgets/sortable", "jquery-ui/ui/widgets/draggable", "jquery-ui/ui/widgets/droppable"], factory);
@@ -276,7 +276,11 @@
                                         }
 
                                         //if using deferred updates on knockout 3.4, force updates
-                                        if (ko.options && ko.options.deferUpdates) {
+                                        //if ((ko.options && ko.options.deferUpdates) || (sourceParent && sourceParent._deferUpdates)) {
+                                        //    ko.tasks.runEarly();
+                                        //}
+
+                                        if (typeof ko.tasks.runEarly === "function") {
                                             ko.tasks.runEarly();
                                         }
                                     }
