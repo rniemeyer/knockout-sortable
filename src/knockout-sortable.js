@@ -105,7 +105,7 @@
             templateElement = document.getElementById(name);
             if (templateElement) {
                 templateSource = new ko.templateSources.domElement(templateElement);
-                templateSource.text($.trim(templateSource.text()));
+                templateSource.text(templateSource.text().trim());
             }
         }
         else {
