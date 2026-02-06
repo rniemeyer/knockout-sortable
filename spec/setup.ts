@@ -3,7 +3,7 @@ export async function loadLibraries(): Promise<void> {
 	return new Promise<void>((resolve) => {
 		// Load jQuery first
 		const jqueryScript = document.createElement("script");
-		jqueryScript.src = "/ext/jquery-3.7.1.min.js";
+		jqueryScript.src = "/ext/jquery-4.0.0.min.js";
 
 		jqueryScript.onload = () => {
 			// Then load jQuery UI
