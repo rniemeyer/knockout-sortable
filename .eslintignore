@@ -1,0 +1,12 @@
+node_modules
+build
+dist
+*.min.js
+coverage
+.nyc_output
+reports
+ext
+examples
+spec/lib
+spec/**/*.js
+src/**/*.js

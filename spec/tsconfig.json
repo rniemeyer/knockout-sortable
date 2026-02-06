@@ -1,0 +1,12 @@
+{
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"types": ["vitest/globals", "jquery", "knockout", "jqueryui"],
+		"rootDir": ".",
+		"module": "ESNext",
+		"target": "ES2017",
+		"lib": ["ES2017", "DOM"]
+	},
+	"include": ["./**/*.ts"],
+	"exclude": ["../node_modules", "../build", "../dist"]
+}

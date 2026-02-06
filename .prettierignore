@@ -1,0 +1,13 @@
+# Build outputs
+build/
+dist/
+node_modules/
+
+# Package files
+package-lock.json
+
+# Examples (keep original formatting)
+examples/
+
+# External libraries
+ext/

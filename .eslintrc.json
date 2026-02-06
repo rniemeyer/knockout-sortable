@@ -1,0 +1,46 @@
+{
+	"root": true,
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 2015,
+		"sourceType": "module"
+	},
+	"plugins": ["@typescript-eslint"],
+	"extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+	"env": {
+		"browser": true,
+		"node": true,
+		"es6": true
+	},
+	"rules": {
+		"@typescript-eslint/no-explicit-any": "warn",
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
+	},
+	"overrides": [
+		{
+			"files": ["src/**/*.ts"],
+			"parserOptions": {
+				"project": "./tsconfig.json"
+			}
+		},
+		{
+			"files": ["spec/**/*.ts"],
+			"env": {
+				"browser": true
+			},
+			"rules": {
+				"@typescript-eslint/no-explicit-any": "off"
+			}
+		},
+		{
+			"files": ["*.config.js", "*.config.ts"],
+			"env": {
+				"node": true
+			},
+			"rules": {
+				"@typescript-eslint/no-var-requires": "off"
+			}
+		}
+	]
+}
