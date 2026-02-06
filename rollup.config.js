@@ -21,12 +21,14 @@ export default [
 					knockout: "ko",
 					jquery: "jQuery"
 				},
-				banner: banner
+				banner: banner,
+				sourcemap: true
 			},
 			{
 				file: "build/knockout-sortable.esm.js",
 				format: "es",
-				banner: banner
+				banner: banner,
+				sourcemap: true
 			}
 		],
 		external: [
